@@ -1,6 +1,7 @@
 package com.example.notice.domain.profile.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.notice.domain.profile.entity.Age;
 import com.example.notice.domain.profile.entity.NickName;
@@ -11,31 +12,37 @@ import com.example.notice.exception.NoSuchProfileException;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
 	private final ProfileRepository profileRepository;
 
 	@Override
-	public Profile createProfile(NickName nickName, Age age) {
-		return profileRepository.save(Profile.of(nickName, age));
+	public Profile createProfile(final Profile profile) {
+		return profileRepository.save(profile);
 	}
 
 	@Override
-	public Profile getProfileById(Long id) {
+	public Profile getProfileById(final Long id) {
 		return profileRepository.findById(id)
 			.orElseThrow(() -> new NoSuchProfileException());
 	}
 
 	@Override
-	public Profile getProfileByNickName(NickName nickName) {
+	public Profile getProfileByNickName(final NickName nickName) {
 		return profileRepository.findProfileByNickName(nickName)
 			.orElseThrow(() -> new NoSuchProfileException());
 	}
 
 	@Override
-	public void deleteProfile(Long id) {
-		profileRepository.deleteById(id);
+	public void deleteProfileByNickname(final NickName nickName) {
+		final Profile profile = profileRepository.findProfileByNickName(nickName)
+			.orElseThrow(() -> new NoSuchProfileException());
+
+		System.out.println("Htoo");
+		profileRepository.deleteById(profile.getId());
+
 	}
 
 }

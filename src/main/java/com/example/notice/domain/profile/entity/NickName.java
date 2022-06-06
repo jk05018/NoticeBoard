@@ -1,5 +1,7 @@
 package com.example.notice.domain.profile.entity;
 
+import java.util.Optional;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -21,6 +23,12 @@ public class NickName {
 		verifyNickName(nickName);
 
 		this.nickName = nickName;
+	}
+
+	public static String toString(final NickName nickName){
+		return Optional.ofNullable(nickName)
+			.map(wrapper -> wrapper.nickName)
+			.orElseThrow(IllegalStateException::new);
 	}
 
 	private void verifyNickName(final String nickName) {
