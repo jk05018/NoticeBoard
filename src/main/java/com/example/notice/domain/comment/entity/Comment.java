@@ -1,4 +1,4 @@
-package com.example.notice.domain.notice.entity;
+package com.example.notice.domain.comment.entity;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -7,6 +7,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -15,45 +16,55 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.notice.domain.base.BaseIdEntity;
+import com.example.notice.domain.notice.entity.Body;
+import com.example.notice.domain.notice.entity.Notice;
 import com.example.notice.domain.profile.entity.Profile;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/* 댓글 */
 @Entity
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseIdEntity {
 
+	/* 내용 */
 	@Embedded
-	private Body body;
+	private Content content;
 
+	/* 공지사항 */
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "notice_id")
 	private Notice notice;
 
+	/* 작성자 */
 	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "profile_id")
 	private Profile writer;
 
+	/* 댓글 작성 일자 */
 	@CreatedDate
 	private LocalDateTime createdDate;
 
+	/* 댓글 최근 수정 일자 */
 	@LastModifiedDate
 	private LocalDateTime updatedDate;
 
-	private Comment(final Body body, final Notice notice, final Profile writer) {
-		Optional.ofNullable(body).ifPresent(safeBody -> this.body = safeBody);
+	private Comment(final Content content, final Notice notice, final Profile writer) {
+		Optional.ofNullable(content).ifPresent(safeContent -> this.content = safeContent);
 		Optional.ofNullable(notice).ifPresent(safeNotice -> this.notice = safeNotice);
 		Optional.ofNullable(writer).ifPresent(safeWriter -> this.writer = safeWriter);
 	}
 
-	public static Comment of(final Body body, final Notice notice, final Profile writer) {
-		return new Comment(body, notice, writer);
+	public static Comment of(final Content content, final Notice notice, final Profile writer) {
+		return new Comment(content, notice, writer);
 	}
 
-	public void updateBody(final Body body) {
-		Optional.ofNullable(body).ifPresent(safeBody -> this.body = safeBody);
+	public void updateBody(final Content content) {
+		Optional.ofNullable(content).ifPresent(safeContent -> this.content = safeContent);
 	}
 
 }
