@@ -45,7 +45,6 @@ class ProfileServiceTest extends AbstractServiceTest {
 	void 프로필을_삭제할_수_있다() {
 		profileService.deleteProfileByNickname(profile.getNickName());
 
-		// assertThrows(NoSuchProfileException.class , () -> profileRepository.findProfileByNickName(profile.getNickName()));
 		assertThrows(NoSuchProfileException.class, () -> profileService.getProfileByNickName(profile.getNickName()));
 	}
 

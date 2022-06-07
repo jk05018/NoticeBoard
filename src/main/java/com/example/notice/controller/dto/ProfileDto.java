@@ -29,7 +29,6 @@ public class ProfileDto {
 			private int age;
 
 			public Profile convert() {
-				System.out.println(nickname + " " + age);
 				return Profile.of(new NickName(nickname),
 								 new Age(age));
 			}
@@ -39,17 +38,17 @@ public class ProfileDto {
 
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class ProfileResponse{
+	public static class ProfileResponse {
 
 		@JsonProperty("profile")
 		private final Response response;
 
-		public static ProfileResponse convert(final Profile profile){
+		public static ProfileResponse convert(final Profile profile) {
 			return new ProfileResponse(Response.convert(profile));
 		}
 
 		@Getter
-		public static class Response{
+		public static class Response {
 
 			private final String nickname;
 			private final int age;
@@ -60,7 +59,7 @@ public class ProfileDto {
 				this.age = Age.toInt(age);
 			}
 
-			public static Response convert(final Profile profile){
+			public static Response convert(final Profile profile) {
 				return Response.builder()
 					.nickname(profile.getNickName())
 					.age(profile.getAge())

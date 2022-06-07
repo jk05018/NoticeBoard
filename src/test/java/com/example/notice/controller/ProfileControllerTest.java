@@ -1,32 +1,36 @@
 package com.example.notice.controller;
 
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.example.notice.domain.profile.service.ProfileService;
 
-public class ProfileControllerTest extends BasicControllerTest{
+public class ProfileControllerTest extends BasicControllerTest {
 
-	private static final String BASE_URL = getBaseUrl(ProfileController.class);
+	private static final String BASE_URI = getBaseUrl(ProfileController.class);
 
 	@Test
-	public void 닉네임_나이로_프로필을_생성한다() throws Exception {
-		ObjectNode objectNode = new ObjectMapper().createObjectNode();
-		ObjectNode profile = objectNode.putObject("profile");
-		profile.put("nickname","seunghan")
-				.put("age",25);
-
-		mockMvc.perform(post(BASE_URL)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectNode.toString()))
-			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.profile.nickname").value("seunghan"))
-			.andExpect(jsonPath("$.profile.age").value(25));
+	public void 닉네임으로_프로필을_조회할_수_있다() throws Exception {
+		mockMvc.perform(get(UriComponentsBuilder.fromUriString(BASE_URI)
+							.pathSegment(nickname)
+							.build()
+							.toUri()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.profile.nickname").value(nickname))
+			.andExpect(jsonPath("$.profile.age").value(age));
 	}
 
+	@Test
+	public void 닉네임으로_프로필을_삭제할_수_있다() throws Exception {
+		mockMvc.perform(delete(UriComponentsBuilder.fromUriString(BASE_URI)
+						.pathSegment(nickname)
+						.build()
+						.toUri()))
+			.andExpect(status().isOk());
+	}
 }
