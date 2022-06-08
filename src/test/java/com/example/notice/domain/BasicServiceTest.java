@@ -29,14 +29,22 @@ public class BasicServiceTest {
 	private ProfileService profileService;
 
 	protected Profile profile;
+	protected Profile profile2;
 
 	@BeforeEach
 	void setUp() {
-		final NickName nickName = new NickName("seunghan");
-		final Email email = new Email("seunghan@naver.com");
+		final NickName nickName = new NickName("profile");
+		final Email email = new Email("profile@naver.com");
 		final Age age = new Age(25);
 
 		profile = 프로필_생성(nickName, email ,age);
+		final NickName nickName2 = new NickName("profile2");
+		final Email email2 = new Email("profile2@naver.com");
+		final Age age2 = new Age(30);
+
+		profile2 = 프로필_생성(nickName2, email2 ,age2);
+
+
 	}
 
 	protected Profile 프로필_생성(final NickName nickName, final Email email, final Age age) {

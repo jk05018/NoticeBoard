@@ -12,7 +12,7 @@ public interface NoticeService {
 
 	Notice getNoticeById(final Long noticeId);
 
-	Notice updateNotice(final Notice notice);
+	Notice updateNotice(final Notice udpateNotice, final Long noticeId);
 
 	void deleteNoticeById(final Long noticeId);
 

@@ -37,7 +37,7 @@ public class NoticeServiceImpl implements NoticeService{
 
 	@Override
 	public List<Notice> getNoticeList() {
-		return null;
+		return noticeRepository.findAll();
 	}
 
 	@Override
@@ -47,18 +47,26 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 
 	@Override
-	public Notice updateNotice(final Notice notice) {
-		return null;
+	public Notice updateNotice(final Notice updateNotice, final Long noticeId) {
+		Notice notice = noticeRepository.findById(noticeId)
+			.orElseThrow(NoSuchNoticeException::new);
+
+		notice.updateNotice(updateNotice);
+
+		return notice;
 	}
 
 	@Override
 	public void deleteNoticeById(final Long noticeId) {
-
+		noticeRepository.deleteById(noticeId);
 	}
 
 	@Override
 	public List<Notice> getNoticeListByProfile(final Long profileId) {
-		return null;
+		final Profile writer = profileRepository.findById(profileId)
+			.orElseThrow(NoSuchProfileException::new);
+
+		return noticeRepository.findAllByWriter(writer);
 	}
 
 	@Override
