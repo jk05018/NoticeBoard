@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Title {
 
-	@Column(length = 30)
+	@Column(unique = true, length = 30)
 	private String title;
 
 	public Title(String title) {

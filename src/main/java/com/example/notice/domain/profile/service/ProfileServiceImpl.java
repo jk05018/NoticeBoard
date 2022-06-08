@@ -7,6 +7,7 @@ import com.example.notice.domain.profile.entity.Age;
 import com.example.notice.domain.profile.entity.NickName;
 import com.example.notice.domain.profile.entity.Profile;
 import com.example.notice.domain.profile.repository.ProfileRepository;
+import com.example.notice.exception.EmailDuplicatedException;
 import com.example.notice.exception.NoSuchProfileException;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,10 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public Profile createProfile(final Profile profile) {
+		if(profileRepository.existsProfileByEmail(profile.getEmail())){
+			throw new EmailDuplicatedException();
+		}
+
 		return profileRepository.save(profile);
 	}
 
@@ -40,7 +45,6 @@ public class ProfileServiceImpl implements ProfileService {
 		final Profile profile = profileRepository.findProfileByNickName(nickName)
 			.orElseThrow(() -> new NoSuchProfileException());
 
-		System.out.println("Htoo");
 		profileRepository.deleteById(profile.getId());
 
 	}

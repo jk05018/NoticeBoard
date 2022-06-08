@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/profiles")
+@RequestMapping("/api/profiles")
 public class ProfileController {
 
 	private final ProfileService profileService;
