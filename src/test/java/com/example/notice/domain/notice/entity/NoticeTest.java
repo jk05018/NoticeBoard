@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import com.example.notice.domain.profile.entity.Age;
+import com.example.notice.domain.profile.entity.Email;
 import com.example.notice.domain.profile.entity.NickName;
 import com.example.notice.domain.profile.entity.Profile;
 
@@ -21,7 +22,7 @@ class NoticeTest {
 
 	@BeforeEach
 	void setUp() {
-		profile = Profile.of(new NickName("seunghan"), new Age(25));
+		profile = Profile.of(new NickName("seunghan"), new Email("writer@email.com"), new Age(25));
 	}
 
 	@Test
@@ -31,7 +32,7 @@ class NoticeTest {
 		final Body body = new Body("this is body");
 
 		// when
-		final Notice notice = Notice.of(title, body, profile);
+		final Notice notice = Notice.createOf(title, body);
 
 		// then
 		assertThat(notice).extracting(Notice::getTitle, Notice::getBody, Notice::getWriter)
@@ -42,30 +43,31 @@ class NoticeTest {
 	@NullAndEmptySource
 	void 제목은_공백이면_안된다(final String nullAndEmptyParam) {
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> Notice.of(new Title(nullAndEmptyParam), new Body("body"), profile));
+			.isThrownBy(() -> Notice.createOf(new Title(nullAndEmptyParam), new Body("body")));
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> Notice.of(new Title(""), new Body("body"), profile));
+			.isThrownBy(() -> Notice.createOf(new Title(""), new Body("body")));
 	}
 
 	@ParameterizedTest
 	@NullAndEmptySource
 	void 내용은_공백이면_안된다(final String nullAndEmptyParam) {
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> Notice.of(new Title("title"), new Body(nullAndEmptyParam), profile));
+			.isThrownBy(() -> Notice.createOf(new Title("title"), new Body(nullAndEmptyParam)));
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> Notice.of(new Title("title"), new Body(""), profile));
+			.isThrownBy(() -> Notice.createOf(new Title("title"), new Body("")));
 	}
 
 	@Test
 	void 공지사항의_제목_내용을_수정할_수_있다() {
 		// given
-		final Notice notice = Notice.of(new Title("this is title"), new Body("this is body"), profile);
+		final Notice notice = Notice.createOf(new Title("this is title"), new Body("this is body"));
 
 		// when
 		final Title updateTitle = new Title("updateTitle");
 		final Body updateBody = new Body("updateBody");
 
-		notice.updateNotice(updateTitle, updateBody);
+		final Notice updateNotice = Notice.updateOf(updateTitle, updateBody);
+		notice.updateNotice(updateNotice);
 
 		// then
 		assertThat(notice).extracting(Notice::getTitle, Notice::getBody)
