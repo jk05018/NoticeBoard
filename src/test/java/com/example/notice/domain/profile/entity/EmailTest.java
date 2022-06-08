@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -14,8 +13,6 @@ import com.example.notice.exception.EmailNotMatchException;
 
 class EmailTest {
 
-	private String pattern = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-
 	@ParameterizedTest
 	@CsvSource({
 		"seunghan@naver.com",
@@ -23,7 +20,7 @@ class EmailTest {
 		"hani@pusan.ac.kr"
 	})
 	void 패턴_테스트(final String email) {
-		Assertions.assertTrue(Pattern.matches(pattern, email));
+		Assertions.assertTrue(Pattern.matches(Email.EMAIL_REGEX, email));
 	}
 
 	@ParameterizedTest

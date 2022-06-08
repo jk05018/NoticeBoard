@@ -33,6 +33,7 @@ class NoticeTest {
 
 		// when
 		final Notice notice = Notice.createOf(title, body);
+		notice.assignWriter(profile);
 
 		// then
 		assertThat(notice).extracting(Notice::getTitle, Notice::getBody, Notice::getWriter)

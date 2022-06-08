@@ -53,14 +53,17 @@ public class Comment extends BaseIdEntity {
 	@LastModifiedDate
 	private LocalDateTime updatedDate;
 
-	private Comment(final Content content, final Notice notice, final Profile writer) {
+	private Comment(final Content content) {
 		Optional.ofNullable(content).ifPresent(safeContent -> this.content = safeContent);
-		Optional.ofNullable(notice).ifPresent(safeNotice -> this.notice = safeNotice);
-		Optional.ofNullable(writer).ifPresent(safeWriter -> this.writer = safeWriter);
 	}
 
-	public static Comment of(final Content content, final Notice notice, final Profile writer) {
-		return new Comment(content, notice, writer);
+	public static Comment of(final Content content) {
+		return new Comment(content);
+	}
+
+	public void assignNoticeAndWriter(final Notice notice, final Profile writer){
+		Optional.ofNullable(notice).ifPresent(safeNotice -> this.notice = safeNotice);
+		Optional.ofNullable(writer).ifPresent(safeWriter -> this.writer = safeWriter);
 	}
 
 	public void updateBody(final Content content) {
