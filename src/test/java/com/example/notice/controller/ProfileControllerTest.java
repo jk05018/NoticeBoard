@@ -22,6 +22,7 @@ public class ProfileControllerTest extends BasicControllerTest {
 							.toUri()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.profile.nickname").value(nickname))
+			.andExpect(jsonPath("$.profile.email").value(email))
 			.andExpect(jsonPath("$.profile.age").value(age));
 	}
 

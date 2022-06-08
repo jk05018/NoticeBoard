@@ -24,18 +24,22 @@ public class Profile extends BaseIdEntity {
 	private NickName nickName;
 
 	@Embedded
+	private Email email;
+
+	@Embedded
 	private Age age;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	private User user;
 
-	private Profile(final NickName nickName, final Age age) {
+	private Profile(final NickName nickName, final Email email, final Age age) {
 		Optional.ofNullable(nickName).ifPresent(safeNickname -> this.nickName = safeNickname);
+		Optional.ofNullable(email).ifPresent(safeEmail -> this.email = safeEmail);
 		Optional.ofNullable(age).ifPresent(safeAge -> this.age = safeAge);
 	}
 
-	public static Profile of(final NickName nickName, final Age age) {
-		return new Profile(nickName, age);
+	public static Profile of(final NickName nickName,final Email email, final Age age) {
+		return new Profile(nickName, email, age);
 	}
 
 	public void assignUser(final User user){

@@ -12,10 +12,11 @@ class ProfileTest {
 	void Profile_생성_테스트() {
 		// given
 		final NickName nickname = new NickName("han");
+		final Email email = new Email("seunghan@naver.com");
 		final Age age = new Age(20);
 
 		// when
-		final Profile profile = Profile.of(nickname, age);
+		final Profile profile = Profile.of(nickname, email, age);
 
 		// then
 		assertThat(profile.getNickName()).isEqualTo(nickname);
