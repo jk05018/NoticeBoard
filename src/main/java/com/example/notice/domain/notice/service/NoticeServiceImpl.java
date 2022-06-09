@@ -25,11 +25,9 @@ public class NoticeServiceImpl implements NoticeService{
 
 	@Override
 	public Notice createNotice(final Notice notice, final Long profileId) {
-		System.out.println("transaction start");
 		final Profile writer = profileRepository.findById(profileId)
 			.orElseThrow(NoSuchProfileException::new);
 
-		System.out.println(writer.getNickName() + " " + writer.getEmail() + " " + writer.getAge()) ;
 		notice.assignWriter(writer);
 
 		return noticeRepository.save(notice);

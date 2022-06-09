@@ -118,7 +118,7 @@ class NoticeServiceTest extends BasicServiceTest {
 
 			return savedNotice;
 		} catch (Exception e) {
-			throw new NoticeProjectException(e.getMessage());
+			throw new NoticeProjectException("테스트 공지사항 등록 실패 입니다.", e);
 		}
 	}
 
@@ -131,7 +131,7 @@ class NoticeServiceTest extends BasicServiceTest {
 				)
 				.collect(Collectors.toList());
 		} catch (Exception e) {
-			throw new NoticeProjectException(e.getMessage());
+			throw new NoticeProjectException("테스트 공지사항 랜덤 등록 실패 입니다.", e);
 		}
 	}
 

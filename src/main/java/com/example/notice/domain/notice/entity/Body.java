@@ -1,5 +1,7 @@
 package com.example.notice.domain.notice.entity;
 
+import java.util.Optional;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Lob;
@@ -17,15 +19,21 @@ public class Body {
 
 	private String body;
 
-	public Body(String body) {
+	public Body(final String body) {
 		verifyBody(body);
 
 		this.body = body;
 	}
 
-	private void verifyBody(String body) {
+	private void verifyBody(final String body) {
 		if (StringUtils.isEmpty(body)) {
 			throw new IllegalArgumentException("Article의 body은 빈 값일 수 없습니다.");
 		}
+	}
+
+	public static String toString(final Body body){
+		return Optional.ofNullable(body)
+			.map(wrapper -> wrapper.body)
+			.orElseThrow(IllegalStateException::new);
 	}
 }

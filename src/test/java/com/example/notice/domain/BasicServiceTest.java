@@ -56,7 +56,7 @@ public class BasicServiceTest {
 
 			return savedProfile;
 		} catch (Exception e) {
-			throw new NoticeProjectException();
+			throw new NoticeProjectException("테스트 프로필 등록 실패 입니다.", e);
 		}
 	}
 }
