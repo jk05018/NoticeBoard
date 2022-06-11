@@ -30,7 +30,7 @@ public class NoticeControllerTest extends BasicControllerTest {
 	private final String BASE_URI = getBaseUrl(NoticeController.class);
 
 	@Test
-	void 공지사항을_아이디로_조회할수_있다() throws Exception {
+	void 공지사항을_슬러지로_조회할수_있다() throws Exception {
 		final String title = "title";
 		final String body = "body";
 
@@ -62,6 +62,35 @@ public class NoticeControllerTest extends BasicControllerTest {
 			.andExpect(jsonPath("$.notices[*].body").exists())
 			.andExpect(jsonPath("$.notices[*].writer").exists())
 			.andExpect(jsonPath("$.noticeCount", is(30)));
+	}
+
+	@Test
+	void 공지사항을_수정할수_있다() throws Exception {
+		공지사항_등록("title", "body", profile);
+
+		final String updateTitle = "updateTitle";
+		final String updateBody = "updateBody";
+
+		final ObjectNode objectNode = new ObjectMapper().createObjectNode();
+		final ObjectNode notice = objectNode.putObject("notice");
+		notice.put("title", updateTitle)
+			.put("body", updateBody);
+
+		mockMvc.perform(put(UriComponentsBuilder.fromUriString(BASE_URI)
+				.pathSegment(Slug.toSlug("title"))
+				.build()
+				.toUri())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectNode.toString()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.notice.title").value(updateTitle))
+			.andExpect(jsonPath("$.notice.slug").value(Slug.toSlug("title")))
+			.andExpect(jsonPath("$.notice.body").value(updateBody))
+			.andExpect(jsonPath("$.notice.writer.nickname").value(NickName.toString(profile.getNickName())))
+			.andExpect(jsonPath("$.notice.writer.email").value(Email.toString(profile.getEmail())))
+			.andExpect(jsonPath("$.notice.writer.age").value(Age.toInt(profile.getAge())));
+		;
+
 	}
 
 	private void 공지사항_등록(final String title, final String body, final Profile profile) {

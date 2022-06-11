@@ -44,6 +44,29 @@ public class NoticeDto {
 	}
 
 	@Getter
+	public static class UpdateNoticeRequest{
+
+		@JsonProperty("notice")
+		private Request request;
+
+		public Notice convert(){
+			return request.convert();
+		}
+
+		@Getter
+		public static class Request{
+
+			private String title;
+			private String body;
+
+			public Notice convert(){
+				return Notice.updateOf(new Title(title),
+									   new Body(body));
+			}
+		}
+	}
+
+	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class NoticeResponse {
 
