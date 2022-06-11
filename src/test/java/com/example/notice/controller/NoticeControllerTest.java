@@ -2,6 +2,7 @@ package com.example.notice.controller;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.stream.IntStream;
@@ -88,9 +89,22 @@ public class NoticeControllerTest extends BasicControllerTest {
 			.andExpect(jsonPath("$.notice.body").value(updateBody))
 			.andExpect(jsonPath("$.notice.writer.nickname").value(NickName.toString(profile.getNickName())))
 			.andExpect(jsonPath("$.notice.writer.email").value(Email.toString(profile.getEmail())))
-			.andExpect(jsonPath("$.notice.writer.age").value(Age.toInt(profile.getAge())));
-		;
+			.andExpect(jsonPath("$.notice.writer.age").value(Age.toInt(profile.getAge())));;
+	}
 
+	@Test
+	void 공지사항을_삭제할수_있다() throws Exception {
+		final String title = "title";
+		final String slug = Slug.toSlug(title);
+
+		공지사항_등록(title, "body", profile);
+
+		mockMvc.perform(delete(UriComponentsBuilder.fromUriString(BASE_URI)
+				.pathSegment(slug)
+				.build()
+				.toUri()))
+			.andExpect(status().isOk())
+			.andDo(print());
 	}
 
 	private void 공지사항_등록(final String title, final String body, final Profile profile) {
@@ -118,4 +132,6 @@ public class NoticeControllerTest extends BasicControllerTest {
 			throw new NoticeProjectException("테스트 공지사항 생성 실패", e);
 		}
 	}
+
+
 }

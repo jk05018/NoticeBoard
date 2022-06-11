@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,7 +57,11 @@ public class NoticeController {
 		final Notice updatedNotice = noticeService.updateNotice(updateRequest.convert(), slug);
 
 		return new ResponseEntity<>(NoticeResponse.convert(updatedNotice), HttpStatus.OK);
+	}
 
+	@DeleteMapping("/{slug}")
+	public void deleteNotice(@PathVariable Slug slug){
+		noticeService.deleteNoticeBySlug(slug);
 	}
 
 
