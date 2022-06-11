@@ -31,6 +31,10 @@ public class Notice extends BaseIdEntity {
 	@Embedded
 	private Title title;
 
+	/* 식별자 */
+	@Embedded
+	private Slug slug;
+
 	/* 내용 */
 	@Embedded
 	private Body body;
@@ -52,7 +56,10 @@ public class Notice extends BaseIdEntity {
 	private Likes likes;
 
 	private Notice(final Title title, final Body body) {
-		Optional.ofNullable(title).ifPresent(safeTitle -> this.title = safeTitle);
+		Optional.ofNullable(title).ifPresent(safeTitle -> {
+			this.title = safeTitle;
+			this.slug = new Slug(title);
+		});
 		Optional.ofNullable(body).ifPresent(safeBody -> this.body = safeBody);
 	}
 

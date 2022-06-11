@@ -1,5 +1,6 @@
 package com.example.notice.controller;
 
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -26,8 +27,8 @@ public class ProfileControllerTest extends BasicControllerTest {
 							.build()
 							.toUri()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.profile.nickname").value(NickName.toString(profile.getNickName())))
-			.andExpect(jsonPath("$.profile.email").value(Email.toString(profile.getEmail())))
+			.andExpect(jsonPath("$.profile.%s", "nickname").value(NickName.toString(profile.getNickName())))
+			.andExpect(jsonPath("$.profile.email",is(Email.toString(profile.getEmail()))))
 			.andExpect(jsonPath("$.profile.age").value(Age.toInt(profile.getAge())));
 	}
 
