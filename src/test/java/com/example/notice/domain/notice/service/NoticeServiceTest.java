@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.example.notice.domain.BasicServiceTest;
 import com.example.notice.domain.notice.entity.Body;
 import com.example.notice.domain.notice.entity.Notice;
+import com.example.notice.domain.notice.entity.Slug;
 import com.example.notice.domain.notice.entity.Title;
 import com.example.notice.domain.notice.repository.NoticeRepository;
 import com.example.notice.domain.profile.entity.Profile;
@@ -32,15 +33,16 @@ class NoticeServiceTest extends BasicServiceTest {
 		// given
 		final Title title = new Title("title");
 		final Body body = new Body("body");
+		final Slug slug = new Slug(title);
 
 		final Notice notice = 공지사항_등록(title, body, profile);
 
 		// when
-		final Notice findNotice = noticeService.getNoticeById(notice.getId());
+		final Notice findNotice = noticeService.getNoticeBySlug(slug);
 
 		// then
-		assertThat(findNotice).extracting(Notice::getTitle, Notice::getBody, Notice::getWriter)
-			.isEqualTo(List.of(notice.getTitle(), notice.getBody(), profile));
+		assertThat(findNotice).extracting(Notice::getTitle,Notice::getSlug, Notice::getBody, Notice::getWriter)
+			.isEqualTo(List.of(notice.getTitle(), notice.getSlug(), notice.getBody(), profile));
 
 	}
 
@@ -69,11 +71,10 @@ class NoticeServiceTest extends BasicServiceTest {
 		// when
 		final Title updateTitle = new Title("update title");
 		final Body updateBody = new Body("update Body");
-
-		noticeService.updateNotice(Notice.updateOf(updateTitle, updateBody), notice.getId());
+		noticeService.updateNotice(Notice.updateOf(updateTitle, updateBody), new Slug(title));
 
 		// then
-		final Notice updatedNotice = noticeService.getNoticeById(notice.getId());
+		final Notice updatedNotice = noticeService.getNoticeBySlug(new Slug(title));
 
 		assertThat(updatedNotice).extracting(Notice::getTitle, Notice::getBody)
 			.isEqualTo(List.of(updateTitle, updateBody));
@@ -83,13 +84,17 @@ class NoticeServiceTest extends BasicServiceTest {
 	@Test
 	void 공지사항을_ID로_삭제할수_있다() {
 		// given
-		final Notice notice = 공지사항_등록(new Title("title"), new Body("body"), profile);
+		final Title title = new Title("title");
+		final Body body = new Body("body");
+		final Slug slug = new Slug(title);
+
+		final Notice notice = 공지사항_등록(title, body, profile);
 
 		// when
-		noticeService.deleteNoticeById(notice.getId());
+		noticeService.deleteNoticeBySlug(slug);
 
 		// then
-		assertThrows(NoSuchNoticeException.class, () -> noticeService.getNoticeById(notice.getId()));
+		assertThrows(NoSuchNoticeException.class, () -> noticeService.getNoticeBySlug(slug));
 
 	}
 

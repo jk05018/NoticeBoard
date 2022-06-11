@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.notice.domain.notice.entity.Notice;
+import com.example.notice.domain.notice.entity.Slug;
 import com.example.notice.domain.notice.repository.NoticeRepository;
 import com.example.notice.domain.profile.entity.Profile;
 import com.example.notice.domain.profile.repository.ProfileRepository;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class NoticeServiceImpl implements NoticeService{
+public class NoticeServiceImpl implements NoticeService {
 
 	private final NoticeRepository noticeRepository;
 	private final ProfileRepository profileRepository;
@@ -39,14 +39,14 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 
 	@Override
-	public Notice getNoticeById(final Long noticeId) {
-		return noticeRepository.findById(noticeId)
+	public Notice getNoticeBySlug(Slug slug) {
+		return noticeRepository.findBySlug(slug)
 			.orElseThrow(NoSuchNoticeException::new);
 	}
 
 	@Override
-	public Notice updateNotice(final Notice updateNotice, final Long noticeId) {
-		Notice notice = noticeRepository.findById(noticeId)
+	public Notice updateNotice(final Notice updateNotice, final Slug slug) {
+		Notice notice = noticeRepository.findBySlug(slug)
 			.orElseThrow(NoSuchNoticeException::new);
 
 		notice.updateNotice(updateNotice);
@@ -55,8 +55,8 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 
 	@Override
-	public void deleteNoticeById(final Long noticeId) {
-		noticeRepository.deleteById(noticeId);
+	public void deleteNoticeBySlug(Slug slug) {
+		noticeRepository.deleteBySlug(slug);
 	}
 
 	@Override
