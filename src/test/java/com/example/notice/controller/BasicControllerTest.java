@@ -43,9 +43,9 @@ public class BasicControllerTest {
 
 	@BeforeEach
 	void setUp()  {
-		프로필_등록("황승한", "seunghan@naver.com" , 25);
+		프로필_등록("seunghan", "seunghan@naver.com" , 25);
 
-		profile = profileService.getProfileByNickName(new NickName("황승한"));
+		profile = profileService.getProfileByNickName(new NickName("seunghan"));
 
 	}
 

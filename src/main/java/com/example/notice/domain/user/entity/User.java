@@ -1,7 +1,12 @@
 package com.example.notice.domain.user.entity;
 
+import java.util.Optional;
+
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.notice.domain.base.BaseIdEntity;
 
@@ -11,23 +16,35 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "admin")
 public class User extends BaseIdEntity {
 
-	private String username;
+	@Embedded
+	private Username username;
 
-	private String password;
+	@Embedded
+	private Password password;
 
-	private String roles;
-
-	private User(String username, String password, String roles) {
-		this.username = username;
-		this.password = password;
-		this.roles = roles;
+	private User(final Username username, final Password password) {
+		Optional.ofNullable(username).ifPresent(safeUsername -> this.username = safeUsername);
+		Optional.ofNullable(password).ifPresent(safePassword -> this.password = safePassword);
 	}
 
-	public static User of(String username, String password){
-		return new User(username, password, null);
+	public static User createOf(final Username username, final Password password) {
+		return new User(username, password);
 	}
+
+	public static User updateOf(final Password password) {
+		return new User(null, password);
+	}
+
+	public void updatePassword(final User user) {
+		Optional.ofNullable(user.password).ifPresent(pass -> this.password = pass);
+	}
+
+	public void checkPassword(PasswordEncoder passwordEncoder, String credentials){
+		this.password.checkPassword(passwordEncoder, credentials);
+	}
+
 }

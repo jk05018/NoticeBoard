@@ -15,3 +15,9 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
+jwt:
+  header: token
+  issuer: seunghan
+  client-secret: EENY5W0eegTf1naQB2eDeyCLl5kRS2b8xa5c4qLdS0hmVjtbvo8tOyhPMcAmtPuQ
+  expiry_seconds: 60
+
