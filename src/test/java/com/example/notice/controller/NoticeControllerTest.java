@@ -42,6 +42,7 @@ public class NoticeControllerTest extends BasicControllerTest {
 				.build()
 				.toUri()))
 			.andExpect(status().isOk())
+			.andDo(print())
 			.andExpect(jsonPath("$.notice.title", is(title)))
 			.andExpect(jsonPath("$.notice.slug", is(Slug.toSlug(title))))
 			.andExpect(jsonPath("$.notice.body", is(body)))
@@ -106,6 +107,7 @@ public class NoticeControllerTest extends BasicControllerTest {
 			.andExpect(status().isOk())
 			.andDo(print());
 	}
+
 
 	private void 공지사항_등록(final String title, final String body, final Profile profile) {
 		try {

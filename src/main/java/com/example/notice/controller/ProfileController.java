@@ -30,12 +30,14 @@ public class ProfileController {
 	@PostMapping
 	public ResponseEntity<ProfileResponse> createProfile(@RequestBody ProfileCreateRequest profileCreateRequest){
 		final Profile createdProfile = profileService.createProfile(profileCreateRequest.convert());
+
 		return new ResponseEntity<>(ProfileResponse.convert(createdProfile), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{nickname}")
 	public ResponseEntity<ProfileResponse> getProfileByNickName(@PathVariable NickName nickname){
 		final Profile findProfile = profileService.getProfileByNickName(nickname);
+
 		return new ResponseEntity<>(ProfileResponse.convert(findProfile), HttpStatus.OK);
 	}
 

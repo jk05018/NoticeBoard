@@ -30,8 +30,7 @@ class UserServiceTest extends BasicServiceTest {
 		final Username username = new Username("seunghan");
 		final Password password = new Password("password123");
 
-		System.out.println(Password.toString(password));
-
+		유저_등록(username, password);
 		// when
 		final User findUser = userService.findByUsername(username);
 

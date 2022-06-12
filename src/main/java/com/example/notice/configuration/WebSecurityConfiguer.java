@@ -40,6 +40,7 @@ public class WebSecurityConfiguer {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		final UserService userService = applicationContext.getBean(UserService.class);
+		final JwtAuthenticationProvider jwtAuthenticationProvider = applicationContext.getBean(JwtAuthenticationProvider.class);
 
 		http
 			.formLogin().disable()
@@ -52,12 +53,12 @@ public class WebSecurityConfiguer {
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.getSharedObject(AuthenticationManagerBuilder.class)
-			.authenticationProvider(jwtAuthenticationProvider(userService, jwt()));
+			.authenticationProvider(jwtAuthenticationProvider);
 
 		http
-			.authorizeRequests()
-			.antMatchers("/*")
-			.permitAll();
+			.authorizeHttpRequests()
+			.antMatchers("/api/users/signup", "/api/users/login").permitAll()
+			.anyRequest().authenticated();
 
 		http.addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class);
 
