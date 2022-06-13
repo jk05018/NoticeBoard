@@ -7,9 +7,9 @@ import java.util.Objects;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.example.notice.domain.user.entity.Password;
+import com.example.notice.domain.user.entity.Profile;
 import com.example.notice.domain.user.entity.User;
 import com.example.notice.domain.user.entity.Username;
 import com.example.notice.domain.user.repository.UserRepository;
@@ -31,6 +31,16 @@ public class UserServiceImpl implements UserService {
 
 		final User user = findByUsername(principal);
 		user.checkPassword(passwordEncoder, Password.toString(credentials));
+		return user;
+	}
+
+	@Override
+	public User makeProfile(final Username username, final Profile profile) {
+		final User user = userRepository.findByUsername(username)
+			.orElseThrow(NoSuchUserException::new);
+
+		user.assignProfile(profile);
+
 		return user;
 	}
 

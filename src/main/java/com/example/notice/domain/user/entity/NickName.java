@@ -1,4 +1,4 @@
-package com.example.notice.domain.profile.entity;
+package com.example.notice.domain.user.entity;
 
 import java.util.Optional;
 
@@ -25,14 +25,14 @@ public class NickName {
 		this.nickName = nickName;
 	}
 
-	public static String toString(final NickName nickName){
+	public static String toString(final NickName nickName) {
 		return Optional.ofNullable(nickName)
 			.map(wrapper -> wrapper.nickName)
 			.orElseThrow(IllegalStateException::new);
 	}
 
 	private void verifyNickName(final String nickName) {
-		if(StringUtils.isEmpty(nickName)){
+		if (StringUtils.isEmpty(nickName)) {
 			throw new IllegalArgumentException("nickname은 1글자 이상 10글자 이하여야 합니다.");
 		}
 	}

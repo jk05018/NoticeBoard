@@ -26,14 +26,14 @@ public class Username {
 		this.username = username;
 	}
 
-	public static String toString(final Username username){
+	public static String toString(final Username username) {
 		return Optional.ofNullable(username)
 			.map(wrapper -> wrapper.username)
 			.orElseThrow(IllegalStateException::new);
 	}
 
 	private void verifyUsername(final String username) {
-		if(StringUtils.isEmpty(username)){
+		if (StringUtils.isEmpty(username)) {
 			throw new IllegalArgumentException("username은 빈 값이면 안됩니다.");
 		}
 	}

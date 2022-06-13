@@ -1,4 +1,4 @@
-package com.example.notice.domain.profile.entity;
+package com.example.notice.domain.user.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import com.example.notice.domain.user.entity.Email;
 import com.example.notice.exception.EmailNotMatchException;
 
 class EmailTest {
@@ -17,7 +18,7 @@ class EmailTest {
 	@CsvSource({
 		"seunghan@naver.com",
 		"han@gmail.com",
-		"hani@pusan.ac.kr"
+		"hani@pusan.ac.kr",
 	})
 	void 패턴_테스트(final String email) {
 		Assertions.assertTrue(Pattern.matches(Email.EMAIL_REGEX, email));

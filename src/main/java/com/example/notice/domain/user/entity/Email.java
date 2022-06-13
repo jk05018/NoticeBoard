@@ -1,8 +1,9 @@
-package com.example.notice.domain.profile.entity;
+package com.example.notice.domain.user.entity;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.springframework.util.StringUtils;
@@ -21,6 +22,7 @@ public class Email {
 	/* Email Validation as per RFC2822 standards */
 	public static final String EMAIL_REGEX = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
+	@Column(unique = true)
 	private String email;
 
 	public Email(final String email) {

@@ -1,4 +1,4 @@
-package com.example.notice.domain.profile.entity;
+package com.example.notice.domain.user.entity;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -12,11 +12,10 @@ class ProfileTest {
 	void Profile_생성_테스트() {
 		// given
 		final NickName nickname = new NickName("han");
-		final Email email = new Email("seunghan@naver.com");
 		final Age age = new Age(20);
 
 		// when
-		final Profile profile = Profile.of(nickname, email, age);
+		final Profile profile = Profile.of(nickname, age);
 
 		// then
 		assertThat(profile.getNickName()).isEqualTo(nickname);
