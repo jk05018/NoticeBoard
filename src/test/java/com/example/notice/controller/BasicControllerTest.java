@@ -39,15 +39,9 @@ public class BasicControllerTest {
 
 	@BeforeEach
 	void setUp() {
-		final String username = "seunghan";
-		final String email = "seunghan@naver.com";
-		final String password = "password123";
-		final String nickname = "nickname";
-		final int age = 25;
-
-		유저_등록(username, email, password);
-		로그인(username, password);
-		프로필_등록(nickname, age);
+		유저_등록("seunghan", "seunghan@naver.com", "pass123");
+		로그인("seunghan", "pass123");
+		프로필_등록("seunghan2", 25);
 
 	}
 
@@ -66,9 +60,7 @@ public class BasicControllerTest {
 					.toUri())
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectNode.toString()))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.user.username").value(username))
-				.andExpect(jsonPath("$.user.email").value(email));
+				.andExpect(status().isCreated());
 		} catch (Exception e) {
 			throw new NoticeProjectException("테스트 유저 등록 실패 입니다.", e);
 		}
@@ -96,7 +88,7 @@ public class BasicControllerTest {
 			loginInfo = new ObjectMapper().readValue(response.getContentAsString(), JsonNode.class);
 
 		} catch (Exception e) {
-			throw new NoticeProjectException("유저 로그인 실패입니다.", e);
+			throw new NoticeProjectException("테스트 유저 로그인 실패입니다.", e);
 		}
 	}
 
@@ -116,6 +108,8 @@ public class BasicControllerTest {
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectNode.toString()))
 				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.user.username").value("seunghan"))
+				.andExpect(jsonPath("$.user.email").value("seunghan@naver.com"))
 				.andExpect(jsonPath("$.user.profile.nickname").value(nickname))
 				.andExpect(jsonPath("$.user.profile.age").value(age));
 

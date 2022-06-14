@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,9 +36,9 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@PostMapping("/{username}")
-	public ResponseEntity<UserResponse> makeProfile(@PathVariable Username username, @RequestBody ProfileCreateRequest request) {
-		final User user = userService.makeProfile(username, request.convert());
+	@PostMapping("profile")
+	public ResponseEntity<UserResponse> makeProfile(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody ProfileCreateRequest request) {
+		final User user = userService.makeProfile(new Username(authentication.username), request.convert());
 
 		return new ResponseEntity<>(UserResponse.convert(user), HttpStatus.CREATED);
 	}

@@ -14,6 +14,7 @@ import com.example.notice.domain.user.entity.User;
 import com.example.notice.domain.user.entity.Username;
 import com.example.notice.domain.user.repository.UserRepository;
 import com.example.notice.exception.NoSuchUserException;
+import com.example.notice.exception.NoticeProjectException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User makeProfile(final Username username, final Profile profile) {
+		if(profile == null){
+			throw new IllegalStateException();
+		}
 		final User user = userRepository.findByUsername(username)
 			.orElseThrow(NoSuchUserException::new);
 

@@ -48,24 +48,24 @@ public class UserDto {
 	}
 
 	@Getter
-	public static class ProfileCreateRequest{
+	public static class ProfileCreateRequest {
 
 		@JsonProperty("profile")
 		private Request request;
 
-		public Profile convert(){
+		public Profile convert() {
 			return request.convert();
 		}
 
 		@Getter
-		public static class Request{
+		public static class Request {
 
 			private String nickname;
 			private int age;
 
-			public Profile convert(){
+			public Profile convert() {
 				return Profile.of(new NickName(nickname),
-								 new Age(age));
+					new Age(age));
 			}
 
 		}
@@ -92,7 +92,7 @@ public class UserDto {
 			private final ProfileResponse.Response response;
 
 			@Builder(access = AccessLevel.PRIVATE)
-			public Response(final String username, final String email , ProfileResponse.Response response) {
+			public Response(final String username, final String email, ProfileResponse.Response response) {
 				this.username = username;
 				this.email = email;
 				this.response = response;
@@ -111,18 +111,19 @@ public class UserDto {
 
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class ProfileResponse{
+	public static class ProfileResponse {
 
 		@JsonProperty("profile")
 		private final Response response;
 
+		@Getter
 		@Builder(access = AccessLevel.PRIVATE)
-		public static class Response{
+		public static class Response {
 
 			private String nickname;
 			private int age;
 
-			public static Response convert(final Profile profile){
+			public static Response convert(final Profile profile) {
 				return Response.builder()
 					.nickname(NickName.toString(profile.getNickName()))
 					.age(Age.toInt(profile.getAge()))
@@ -139,10 +140,25 @@ public class UserDto {
 		private String token;
 
 		@JsonProperty("user")
-		private UserResponse.Response response;
+		private Response response;
 
 		public static UserTokenResponse convert(final String token, final User user) {
-			return new UserTokenResponse(token, UserResponse.Response.convert(user));
+			return new UserTokenResponse(token, Response.convert(user));
+		}
+
+		@Getter
+		@Builder(access = AccessLevel.PRIVATE)
+		public static class Response {
+
+			private String username;
+			private String email;
+
+			public static Response convert(final User user) {
+				return Response.builder()
+					.username(Username.toString(user.getUsername()))
+					.email(Email.toString(user.getEmail()))
+					.build();
+			}
 		}
 
 	}

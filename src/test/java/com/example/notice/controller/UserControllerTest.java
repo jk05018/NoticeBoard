@@ -20,11 +20,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Transactional
 class UserControllerTest extends BasicControllerTest {
 
-	@Test
-	void name() {
-
-	}
-
 	@ParameterizedTest
 	@CsvSource({
 		"user1,hani@email.com,1234",
@@ -43,9 +38,7 @@ class UserControllerTest extends BasicControllerTest {
 				.toUri())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectNode.toString()))
-			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.user.username").value(username))
-			.andExpect(jsonPath("$.user.email").value(email));
+			.andExpect(status().isCreated());
 	}
 
 	@Test
@@ -75,12 +68,6 @@ class UserControllerTest extends BasicControllerTest {
 
 	@Test
 	void 토큰으로_유저_정보를_조회할수_있다() throws Exception {
-		final String username = "user3";
-		final String email = "user3@naver.com";
-		final String password = "pass123";
-
-		유저_등록(username,email, password);
-		로그인(username, password);
 
 		mockMvc.perform(get(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
 				.pathSegment("me")
@@ -88,8 +75,8 @@ class UserControllerTest extends BasicControllerTest {
 				.toUri())
 				.header(TOKEN_HEADER, getToken()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.user.username").value(username))
-			.andExpect(jsonPath("$.user.email").value(email));
+			.andExpect(jsonPath("$.user.username").value("seunghan"))
+			.andExpect(jsonPath("$.user.email").value("seunghan@naver.com"));
 
 	}
 }
