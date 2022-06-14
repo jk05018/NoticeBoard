@@ -55,7 +55,6 @@ public class BasicControllerTest {
 				.put("password", password);
 
 			mockMvc.perform(post(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
-					.pathSegment("signup")
 					.build()
 					.toUri())
 					.contentType(MediaType.APPLICATION_JSON)

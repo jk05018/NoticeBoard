@@ -26,40 +26,44 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/users")
 public class UserController {
 
-	private final UserService userService;
-	private final AuthenticationManager authenticationManager;
+  private final UserService userService;
+  private final AuthenticationManager authenticationManager;
 
-	@PostMapping("/signup")
-	public ResponseEntity signUp(@RequestBody UserSignUpRequest request) {
-		final User user = userService.registerUser(request.convert());
+  @PostMapping()
+  public ResponseEntity signUp(@RequestBody UserSignUpRequest request) {
+    final User user = userService.registerUser(request.convert());
 
-		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
+    return new ResponseEntity<>(HttpStatus.CREATED);
+  }
 
-	@PostMapping("profile")
-	public ResponseEntity<UserResponse> makeProfile(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody ProfileCreateRequest request) {
-		final User user = userService.makeProfile(new Username(authentication.username), request.convert());
+  @PostMapping("profile")
+  public ResponseEntity<UserResponse> makeProfile(
+      @AuthenticationPrincipal JwtAuthentication authentication,
+      @RequestBody ProfileCreateRequest request) {
+    final User user = userService.makeProfile(new Username(authentication.username),
+        request.convert());
 
-		return new ResponseEntity<>(UserResponse.convert(user), HttpStatus.CREATED);
-	}
+    return new ResponseEntity<>(UserResponse.convert(user), HttpStatus.CREATED);
+  }
 
-	@GetMapping("/me")
-	public ResponseEntity<UserResponse> me(@AuthenticationPrincipal JwtAuthentication authentication) {
-		final User user = userService.findByUsername(new Username(authentication.username));
+  @GetMapping("/me")
+  public ResponseEntity<UserResponse> me(
+      @AuthenticationPrincipal JwtAuthentication authentication) {
+    final User user = userService.findByUsername(new Username(authentication.username));
 
-		return new ResponseEntity<>(UserResponse.convert(user), HttpStatus.OK);
-	}
+    return new ResponseEntity<>(UserResponse.convert(user), HttpStatus.OK);
+  }
 
-	@PostMapping("/login")
-	public ResponseEntity<UserTokenResponse> login(@RequestBody UserLoginRequest request) {
-		final JwtAuthenticationToken authToken =
-			new JwtAuthenticationToken(request.getUsername(), request.getPassword());
-		final Authentication resultToken = authenticationManager.authenticate(authToken);
-		final JwtAuthenticationToken authenticated = (JwtAuthenticationToken)resultToken;
-		final JwtAuthentication principal = (JwtAuthentication)authenticated.getPrincipal();
-		final User user = (User)authenticated.getDetails();
+  @PostMapping("/login")
+  public ResponseEntity<UserTokenResponse> login(@RequestBody UserLoginRequest request) {
+    final JwtAuthenticationToken authToken =
+        new JwtAuthenticationToken(request.getUsername(), request.getPassword());
+    final Authentication resultToken = authenticationManager.authenticate(authToken);
+    final JwtAuthenticationToken authenticated = (JwtAuthenticationToken) resultToken;
+    final JwtAuthentication principal = (JwtAuthentication) authenticated.getPrincipal();
+    final User user = (User) authenticated.getDetails();
 
-		return new ResponseEntity<>(UserTokenResponse.convert(principal.token, user), HttpStatus.OK);
-	}
+    return new ResponseEntity<>(UserTokenResponse.convert(principal.token, user), HttpStatus.OK);
+  }
 
 }

@@ -57,7 +57,7 @@ public class WebSecurityConfiguer {
 
 		http
 			.authorizeHttpRequests()
-			.antMatchers("/api/users/signup", "/api/users/login").permitAll()
+			.antMatchers("/api/users", "/api/users/login").permitAll()
 			.anyRequest().authenticated();
 
 		http.addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class);

@@ -30,44 +30,44 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NoticeController {
 
-	private final NoticeService noticeService;
+  private final NoticeService noticeService;
 
-	@PostMapping("/{profileId}")
-	public ResponseEntity<NoticeResponse> createNotice(@AuthenticationPrincipal JwtAuthentication authentication,
-													   @RequestBody CreateNoticeRequest createRequest){
-		final Notice notice = noticeService.createNotice(createRequest.convert(), new Username(authentication.username));
+  @PostMapping("/{profileId}")
+  public ResponseEntity<NoticeResponse> createNotice(
+      @AuthenticationPrincipal JwtAuthentication authentication,
+      @RequestBody CreateNoticeRequest createRequest) {
+    final Notice notice = noticeService.createNotice(createRequest.convert(),
+        new Username(authentication.username));
 
-		return new ResponseEntity<>(NoticeResponse.convert(notice), HttpStatus.CREATED);
-	}
+    return new ResponseEntity<>(NoticeResponse.convert(notice), HttpStatus.CREATED);
+  }
 
-	@GetMapping
-	public ResponseEntity<NoticeResponses> getNotices(){
-		final List<Notice> notices = noticeService.getNoticeList();
+  @GetMapping
+  public ResponseEntity<NoticeResponses> getNotices() {
+    final List<Notice> notices = noticeService.getNoticeList();
 
-		return new ResponseEntity<>(NoticeResponses.convert(notices), HttpStatus.OK);
-	}
+    return new ResponseEntity<>(NoticeResponses.convert(notices), HttpStatus.OK);
+  }
 
-	@GetMapping("/{slug}")
-	public ResponseEntity<NoticeResponse> getNotice(@PathVariable Slug slug){
-		final Notice notice = noticeService.getNoticeBySlug(slug);
+  @GetMapping("/{slug}")
+  public ResponseEntity<NoticeResponse> getNotice(@PathVariable Slug slug) {
+    final Notice notice = noticeService.getNoticeBySlug(slug);
 
-		return new ResponseEntity<>(NoticeResponse.convert(notice), HttpStatus.OK);
-	}
+    return new ResponseEntity<>(NoticeResponse.convert(notice), HttpStatus.OK);
+  }
 
-	@PutMapping("/{slug}")
-	public ResponseEntity<NoticeResponse> updateNotice(@RequestBody UpdateNoticeRequest updateRequest,
-														@PathVariable Slug slug) {
-		final Notice updatedNotice = noticeService.updateNotice(updateRequest.convert(), slug);
+  @PutMapping("/{slug}")
+  public ResponseEntity<NoticeResponse> updateNotice(@RequestBody UpdateNoticeRequest updateRequest,
+      @PathVariable Slug slug) {
+    final Notice updatedNotice = noticeService.updateNotice(updateRequest.convert(), slug);
 
-		return new ResponseEntity<>(NoticeResponse.convert(updatedNotice), HttpStatus.OK);
-	}
+    return new ResponseEntity<>(NoticeResponse.convert(updatedNotice), HttpStatus.OK);
+  }
 
-	@DeleteMapping("/{slug}")
-	public void deleteNotice(@PathVariable Slug slug){
-		noticeService.deleteNoticeBySlug(slug);
-	}
-
-
+  @DeleteMapping("/{slug}")
+  public void deleteNotice(@PathVariable Slug slug) {
+    noticeService.deleteNoticeBySlug(slug);
+  }
 
 
 }

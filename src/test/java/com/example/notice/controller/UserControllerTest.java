@@ -20,63 +20,63 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Transactional
 class UserControllerTest extends BasicControllerTest {
 
-	@ParameterizedTest
-	@CsvSource({
-		"user1,hani@email.com,1234",
-		"user4,han@naber.com,pass123"
-	})
-	void 유저이름과_비밀번호로_유저를_등록할수_있다(final String username, final String email, final String password) throws Exception {
-		ObjectNode objectNode = new ObjectMapper().createObjectNode();
-		ObjectNode user = objectNode.putObject("user");
-		user.put("username", username)
-			.put("email", email)
-			.put("password", password);
+  @ParameterizedTest
+  @CsvSource({
+      "user1,hani@email.com,1234",
+      "user4,han@naber.com,pass123"
+  })
+  void 유저이름과_비밀번호로_유저를_등록할수_있다(final String username, final String email, final String password)
+      throws Exception {
+    ObjectNode objectNode = new ObjectMapper().createObjectNode();
+    ObjectNode user = objectNode.putObject("user");
+    user.put("username", username)
+        .put("email", email)
+        .put("password", password);
 
-		mockMvc.perform(post(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
-				.pathSegment("signup")
-				.build()
-				.toUri())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectNode.toString()))
-			.andExpect(status().isCreated());
-	}
+    mockMvc.perform(post(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
+            .build()
+            .toUri())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectNode.toString()))
+        .andExpect(status().isCreated());
+  }
 
-	@Test
-	void 유저이름과_비밀번호로_로그인할수_있다() throws Exception {
-		final String username = "user3";
-		final String email = "user3@naver.com";
-		final String password = "pass123";
+  @Test
+  void 유저이름과_비밀번호로_로그인할수_있다() throws Exception {
+    final String username = "user3";
+    final String email = "user3@naver.com";
+    final String password = "pass123";
 
-		유저_등록(username, email, password);
+    유저_등록(username, email, password);
 
-		final ObjectNode objectNode = new ObjectMapper().createObjectNode();
-		objectNode.put("username", username)
-			.put("password", password);
+    final ObjectNode objectNode = new ObjectMapper().createObjectNode();
+    objectNode.put("username", username)
+        .put("password", password);
 
-		mockMvc.perform(post(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
-				.pathSegment("login")
-				.build()
-				.toUri())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectNode.toString()))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.token").exists())
-			.andExpect(jsonPath("$.user.username").value(username))
-			.andExpect(jsonPath("$.user.email").value(email));
+    mockMvc.perform(post(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
+            .pathSegment("login")
+            .build()
+            .toUri())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectNode.toString()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.token").exists())
+        .andExpect(jsonPath("$.user.username").value(username))
+        .andExpect(jsonPath("$.user.email").value(email));
 
-	}
+  }
 
-	@Test
-	void 토큰으로_유저_정보를_조회할수_있다() throws Exception {
+  @Test
+  void 토큰으로_유저_정보를_조회할수_있다() throws Exception {
 
-		mockMvc.perform(get(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
-				.pathSegment("me")
-				.build()
-				.toUri())
-				.header(TOKEN_HEADER, getToken()))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.user.username").value("seunghan"))
-			.andExpect(jsonPath("$.user.email").value("seunghan@naver.com"));
+    mockMvc.perform(get(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
+            .pathSegment("me")
+            .build()
+            .toUri())
+            .header(TOKEN_HEADER, getToken()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.user.username").value("seunghan"))
+        .andExpect(jsonPath("$.user.email").value("seunghan@naver.com"));
 
-	}
+  }
 }

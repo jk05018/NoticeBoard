@@ -16,151 +16,153 @@ import lombok.Getter;
 
 public class UserDto {
 
-	@Getter
-	public static class UserSignUpRequest {
+  @Getter
+  public static class UserSignUpRequest {
 
-		@JsonProperty("user")
-		private Request request;
+    @JsonProperty("user")
+    private Request request;
 
-		public User convert() {
-			return request.convert();
-		}
+    public User convert() {
+      return request.convert();
+    }
 
-		@Getter
-		public static class Request {
-			private String username;
-			private String email;
-			private String password;
+    @Getter
+    public static class Request {
 
-			public User convert() {
-				return User.createOf(new Username(username),
-					new Email(email),
-					new Password(password));
-			}
-		}
-	}
+      private String username;
+      private String email;
+      private String password;
 
-	@Getter
-	public static class UserLoginRequest {
+      public User convert() {
+        return User.createOf(new Username(username),
+            new Email(email),
+            new Password(password));
+      }
+    }
+  }
 
-		private String username;
-		private String password;
-	}
+  @Getter
+  public static class UserLoginRequest {
 
-	@Getter
-	public static class ProfileCreateRequest {
+    private String username;
+    private String password;
+  }
 
-		@JsonProperty("profile")
-		private Request request;
+  @Getter
+  public static class ProfileCreateRequest {
 
-		public Profile convert() {
-			return request.convert();
-		}
+    @JsonProperty("profile")
+    private Request request;
 
-		@Getter
-		public static class Request {
+    public Profile convert() {
+      return request.convert();
+    }
 
-			private String nickname;
-			private int age;
+    @Getter
+    public static class Request {
 
-			public Profile convert() {
-				return Profile.of(new NickName(nickname),
-					new Age(age));
-			}
+      private String nickname;
+      private int age;
 
-		}
-	}
+      public Profile convert() {
+        return Profile.of(new NickName(nickname),
+            new Age(age));
+      }
 
-	@Getter
-	@AllArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class UserResponse {
+    }
+  }
 
-		@JsonProperty("user")
-		private Response response;
+  @Getter
+  @AllArgsConstructor(access = AccessLevel.PROTECTED)
+  public static class UserResponse {
 
-		public static UserResponse convert(final User user) {
-			return new UserResponse(Response.convert(user));
-		}
+    @JsonProperty("user")
+    private Response response;
 
-		@Getter
-		public static class Response {
+    public static UserResponse convert(final User user) {
+      return new UserResponse(Response.convert(user));
+    }
 
-			private final String username;
-			private final String email;
+    @Getter
+    public static class Response {
 
-			@JsonProperty("profile")
-			private final ProfileResponse.Response response;
+      private final String username;
+      private final String email;
 
-			@Builder(access = AccessLevel.PRIVATE)
-			public Response(final String username, final String email, ProfileResponse.Response response) {
-				this.username = username;
-				this.email = email;
-				this.response = response;
-			}
+      @JsonProperty("profile")
+      private final ProfileResponse.Response response;
 
-			public static Response convert(final User user) {
-				return Response.builder()
-					.username(Username.toString(user.getUsername()))
-					.email(Email.toString(user.getEmail()))
-					.response(ProfileResponse.Response.convert(user.getProfile()))
-					.build();
-			}
+      @Builder(access = AccessLevel.PRIVATE)
+      public Response(final String username, final String email,
+          ProfileResponse.Response response) {
+        this.username = username;
+        this.email = email;
+        this.response = response;
+      }
 
-		}
-	}
+      public static Response convert(final User user) {
+        return Response.builder()
+            .username(Username.toString(user.getUsername()))
+            .email(Email.toString(user.getEmail()))
+            .response(ProfileResponse.Response.convert(user.getProfile()))
+            .build();
+      }
 
-	@Getter
-	@AllArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class ProfileResponse {
+    }
+  }
 
-		@JsonProperty("profile")
-		private final Response response;
+  @Getter
+  @AllArgsConstructor(access = AccessLevel.PROTECTED)
+  public static class ProfileResponse {
 
-		@Getter
-		@Builder(access = AccessLevel.PRIVATE)
-		public static class Response {
+    @JsonProperty("profile")
+    private final Response response;
 
-			private String nickname;
-			private int age;
+    @Getter
+    @Builder(access = AccessLevel.PRIVATE)
+    public static class Response {
 
-			public static Response convert(final Profile profile) {
-				return Response.builder()
-					.nickname(NickName.toString(profile.getNickName()))
-					.age(Age.toInt(profile.getAge()))
-					.build();
-			}
+      private String nickname;
+      private int age;
 
-		}
-	}
+      public static Response convert(final Profile profile) {
+        return Response.builder()
+            .nickname(NickName.toString(profile.getNickName()))
+            .age(Age.toInt(profile.getAge()))
+            .build();
+      }
 
-	@Getter
-	@AllArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class UserTokenResponse {
+    }
+  }
 
-		private String token;
+  @Getter
+  @AllArgsConstructor(access = AccessLevel.PROTECTED)
+  public static class UserTokenResponse {
 
-		@JsonProperty("user")
-		private Response response;
+    private String token;
 
-		public static UserTokenResponse convert(final String token, final User user) {
-			return new UserTokenResponse(token, Response.convert(user));
-		}
+    @JsonProperty("user")
+    private Response response;
 
-		@Getter
-		@Builder(access = AccessLevel.PRIVATE)
-		public static class Response {
+    public static UserTokenResponse convert(final String token, final User user) {
+      return new UserTokenResponse(token, Response.convert(user));
+    }
 
-			private String username;
-			private String email;
+    @Getter
+    @Builder(access = AccessLevel.PRIVATE)
+    public static class Response {
 
-			public static Response convert(final User user) {
-				return Response.builder()
-					.username(Username.toString(user.getUsername()))
-					.email(Email.toString(user.getEmail()))
-					.build();
-			}
-		}
+      private String username;
+      private String email;
 
-	}
+      public static Response convert(final User user) {
+        return Response.builder()
+            .username(Username.toString(user.getUsername()))
+            .email(Email.toString(user.getEmail()))
+            .build();
+      }
+    }
+
+  }
 
 }
