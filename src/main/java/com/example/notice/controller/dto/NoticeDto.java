@@ -1,7 +1,6 @@
 package com.example.notice.controller.dto;
 
 import static com.example.notice.controller.dto.NoticeDto.NoticeResponse.*;
-import static com.example.notice.controller.dto.ProfileDto.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +9,7 @@ import com.example.notice.domain.notice.entity.Body;
 import com.example.notice.domain.notice.entity.Notice;
 import com.example.notice.domain.notice.entity.Slug;
 import com.example.notice.domain.notice.entity.Title;
-import com.example.notice.domain.profile.entity.Profile;
+import com.example.notice.domain.user.entity.Profile;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
@@ -83,14 +82,14 @@ public class NoticeDto {
 			private final String title;
 			private final String slug;
 			private final String body;
-			private final ProfileResponse.Response writer;
+			private final UserDto.ProfileResponse.Response writer;
 
 			@Builder(access = AccessLevel.PRIVATE)
 			public Response(final Title title,final Slug slug, final Body body, final Profile writer) {
 				this.title = Title.toString(title);
 				this.slug = Slug.toString(slug);
 				this.body = Body.toString(body);
-				this.writer = ProfileResponse.Response.convert(writer);
+				this.writer = UserDto.ProfileResponse.Response.convert(writer);
 			}
 
 			public static Response convert(final Notice notice) {

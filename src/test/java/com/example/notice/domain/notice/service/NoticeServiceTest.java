@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,13 @@ import com.example.notice.domain.notice.entity.Notice;
 import com.example.notice.domain.notice.entity.Slug;
 import com.example.notice.domain.notice.entity.Title;
 import com.example.notice.domain.notice.repository.NoticeRepository;
-import com.example.notice.domain.profile.entity.Profile;
+import com.example.notice.domain.user.entity.Age;
+import com.example.notice.domain.user.entity.Email;
+import com.example.notice.domain.user.entity.NickName;
+import com.example.notice.domain.user.entity.Password;
+import com.example.notice.domain.user.entity.Profile;
+import com.example.notice.domain.user.entity.User;
+import com.example.notice.domain.user.entity.Username;
 import com.example.notice.exception.NoSuchNoticeException;
 import com.example.notice.exception.NoticeProjectException;
 
@@ -35,23 +40,23 @@ class NoticeServiceTest extends BasicServiceTest {
 		final Body body = new Body("body");
 		final Slug slug = new Slug(title);
 
-		final Notice notice = 공지사항_등록(title, body, profile);
+		final Notice notice = 공지사항_등록(title, body, testUser, testProfile);
 
 		// when
 		final Notice findNotice = noticeService.getNoticeBySlug(slug);
 
 		// then
-		assertThat(findNotice).extracting(Notice::getTitle,Notice::getSlug, Notice::getBody, Notice::getWriter)
-			.isEqualTo(List.of(notice.getTitle(), notice.getSlug(), notice.getBody(), profile));
+		assertThat(findNotice).extracting(Notice::getTitle, Notice::getSlug, Notice::getBody, Notice::getWriter)
+			.isEqualTo(List.of(notice.getTitle(), notice.getSlug(), notice.getBody(), testProfile));
 
 	}
 
 	@Test
 	void 공지사항_전체_목록을_조회할수_있다() {
 		// given
-		final Notice notice1 = 공지사항_등록(new Title("title1"), new Body("body1"), profile);
-		final Notice notice2 = 공지사항_등록(new Title("title2"), new Body("body2"), profile);
-		final Notice notice3 = 공지사항_등록(new Title("title3"), new Body("body3"),profile);
+		final Notice notice1 = 공지사항_등록(new Title("title1"), new Body("body1"), testUser, testProfile);
+		final Notice notice2 = 공지사항_등록(new Title("title2"), new Body("body2"), testUser, testProfile);
+		final Notice notice3 = 공지사항_등록(new Title("title3"), new Body("body3"), testUser, testProfile);
 
 		// when
 		final List<Notice> noticeList = noticeService.getNoticeList();
@@ -66,7 +71,7 @@ class NoticeServiceTest extends BasicServiceTest {
 		final Title title = new Title("title");
 		final Body body = new Body("body");
 
-		final Notice notice = 공지사항_등록(title, body,profile);
+		final Notice notice = 공지사항_등록(title, body, testUser, testProfile);
 
 		// when
 		final Title updateTitle = new Title("update title");
@@ -88,7 +93,7 @@ class NoticeServiceTest extends BasicServiceTest {
 		final Body body = new Body("body");
 		final Slug slug = new Slug(title);
 
-		final Notice notice = 공지사항_등록(title, body, profile);
+		final Notice notice = 공지사항_등록(title, body, testUser, testProfile);
 
 		// when
 		noticeService.deleteNoticeBySlug(slug);
@@ -104,19 +109,19 @@ class NoticeServiceTest extends BasicServiceTest {
 		공지사항_랜덤_등록(10, "title", "body");
 
 		// when
-		final List<Notice> noticeListOfProfile = noticeService.getNoticeListByProfile(profile.getId());
+		final List<Notice> noticeListOfProfile = noticeService.getNoticeListByUsername(testUser.getUsername());
 
 		// then
 		assertThat(noticeListOfProfile.size()).isEqualTo(5);
 		assertThat(noticeListOfProfile).extracting(Notice::getWriter)
-			.allSatisfy(writer -> writer.equals(profile));
+			.allSatisfy(writer -> writer.equals(testProfile));
 	}
 
-	Notice 공지사항_등록(final Title title, final Body body, final Profile profile) {
+	Notice 공지사항_등록(final Title title, final Body body, final User user, final Profile profile) {
 		try {
 			final Notice notice = Notice.createOf(title, body);
 
-			final Notice savedNotice = noticeService.createNotice(notice, profile.getId());
+			final Notice savedNotice = noticeService.createNotice(notice, user.getUsername());
 
 			assertThat(savedNotice).extracting(Notice::getTitle, Notice::getBody, Notice::getWriter)
 				.isEqualTo(List.of(title, body, profile));
@@ -127,14 +132,18 @@ class NoticeServiceTest extends BasicServiceTest {
 		}
 	}
 
-	List<Notice> 공지사항_랜덤_등록(final int noticecount, final String title, final String body) {
+	void 공지사항_랜덤_등록(final int noticecount, final String title, final String body) {
 		try {
+			final User testUser2 = 유저_등록(new Username("seunghan2"), new Email("seunghan2@naver.com"),
+				new Password("pass123"));
+			final Profile testProfile2 = 프로필_등록(testUser2, new NickName("testNickname2"), new Age(23));
 
-			return IntStream.range(0, noticecount)
-				.mapToObj(count ->
-					공지사항_등록(new Title(title + count), new Body(body + count), ((count % 2) == 0) ? profile : profile2)
-				)
-				.collect(Collectors.toList());
+			IntStream.range(0, noticecount)
+				.forEach(count ->
+					공지사항_등록(new Title(title + count), new Body(body + count),
+						(count % 2) == 0 ? testUser : testUser2,
+						(count % 2 == 0) ? testProfile : testProfile2)
+				);
 		} catch (Exception e) {
 			throw new NoticeProjectException("테스트 공지사항 랜덤 등록 실패 입니다.", e);
 		}

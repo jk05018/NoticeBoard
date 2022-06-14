@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,9 +31,15 @@ public class UserController {
 	private final AuthenticationManager authenticationManager;
 
 	@PostMapping("/signup")
-	public ResponseEntity<UserResponse> signUp(@RequestBody UserSignUpRequest request) {
+	public ResponseEntity signUp(@RequestBody UserSignUpRequest request) {
 		final User user = userService.registerUser(request.convert());
-		System.out.println(user.getUsername() + " " + user.getPassword());
+
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+
+	@PostMapping("/{username}")
+	public ResponseEntity<UserResponse> makeProfile(@PathVariable Username username, @RequestBody ProfileCreateRequest request) {
+		final User user = userService.makeProfile(username, request.convert());
 
 		return new ResponseEntity<>(UserResponse.convert(user), HttpStatus.CREATED);
 	}

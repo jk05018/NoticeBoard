@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.notice.domain.notice.entity.Notice;
 import com.example.notice.domain.notice.entity.Slug;
-import com.example.notice.domain.profile.entity.Profile;
+import com.example.notice.domain.user.entity.Profile;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
-	List<Notice> findAllByWriter(final Profile profile);
+	List<Notice> findAllByWriter(final Profile writer);
 
 	Optional<Notice> findBySlug(final Slug slug);
 

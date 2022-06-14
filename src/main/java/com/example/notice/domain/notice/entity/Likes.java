@@ -7,7 +7,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import com.example.notice.domain.profile.entity.Profile;
+import com.example.notice.domain.user.entity.Profile;
 
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

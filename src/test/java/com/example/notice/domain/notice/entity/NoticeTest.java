@@ -10,10 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-import com.example.notice.domain.profile.entity.Age;
-import com.example.notice.domain.profile.entity.Email;
-import com.example.notice.domain.profile.entity.NickName;
-import com.example.notice.domain.profile.entity.Profile;
+import com.example.notice.domain.user.entity.Age;
+import com.example.notice.domain.user.entity.NickName;
+import com.example.notice.domain.user.entity.Profile;
 
 @DisplayName("공지사항 테스트")
 class NoticeTest {
@@ -22,7 +21,7 @@ class NoticeTest {
 
 	@BeforeEach
 	void setUp() {
-		profile = Profile.of(new NickName("seunghan"), new Email("writer@email.com"), new Age(25));
+		profile = Profile.of(new NickName("seunghan"), new Age(25));
 	}
 
 	@Test
