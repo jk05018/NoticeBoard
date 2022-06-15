@@ -39,10 +39,8 @@ public class BasicControllerTest {
 
 	@BeforeEach
 	void setUp() {
-		유저_등록("seunghan", "seunghan@naver.com", "pass123");
-		로그인("seunghan", "pass123");
-		프로필_등록("seunghan2", 25);
-
+		유저_등록("seunghan1", "seunghan1@naver.com", "pass123");
+		유저_등록("seunghan2", "seunghan2@naver.com", "pass123");
 	}
 
 	protected void 유저_등록(final String username, final String email, final String password) {
@@ -80,8 +78,6 @@ public class BasicControllerTest {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectNode.toString()))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").exists())
-				.andExpect(jsonPath("$.user.username").value(username))
 				.andReturn().getResponse();
 
 			loginInfo = new ObjectMapper().readValue(response.getContentAsString(), JsonNode.class);
@@ -100,17 +96,13 @@ public class BasicControllerTest {
 				.put("age", age);
 
 			mockMvc.perform(post(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
-					.pathSegment("profile")
-					.build()
-					.toUri())
-					.header(TOKEN_HEADER, getToken())
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectNode.toString()))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.user.username").value("seunghan"))
-				.andExpect(jsonPath("$.user.email").value("seunghan@naver.com"))
-				.andExpect(jsonPath("$.user.profile.nickname").value(nickname))
-				.andExpect(jsonPath("$.user.profile.age").value(age));
+							.pathSegment("profile")
+							.build()
+							.toUri())
+							.header(TOKEN_HEADER, getToken())
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectNode.toString()))
+					.andExpect(status().isCreated());
 
 		} catch (Exception e) {
 			throw new NoticeProjectException("테스트 프로필 등록 실패입니다.", e);

@@ -68,6 +68,8 @@ class UserControllerTest extends BasicControllerTest {
 
   @Test
   void 토큰으로_유저_정보를_조회할수_있다() throws Exception {
+    로그인("seunghan1", "pass123");
+    프로필_등록("profile1", 25);
 
     mockMvc.perform(get(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
             .pathSegment("me")
@@ -75,8 +77,8 @@ class UserControllerTest extends BasicControllerTest {
             .toUri())
             .header(TOKEN_HEADER, getToken()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.user.username").value("seunghan"))
-        .andExpect(jsonPath("$.user.email").value("seunghan@naver.com"));
+        .andExpect(jsonPath("$.user.username").value("seunghan1"))
+        .andExpect(jsonPath("$.user.email").value("seunghan1@naver.com"));
 
   }
 }

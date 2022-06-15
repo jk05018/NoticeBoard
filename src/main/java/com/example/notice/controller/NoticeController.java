@@ -2,6 +2,7 @@ package com.example.notice.controller;
 
 import static com.example.notice.controller.dto.NoticeDto.*;
 
+import com.example.notice.domain.user.entity.NickName;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Required;
@@ -32,7 +33,7 @@ public class NoticeController {
 
   private final NoticeService noticeService;
 
-  @PostMapping("/{profileId}")
+  @PostMapping
   public ResponseEntity<NoticeResponse> createNotice(
       @AuthenticationPrincipal JwtAuthentication authentication,
       @RequestBody CreateNoticeRequest createRequest) {
@@ -69,5 +70,14 @@ public class NoticeController {
     noticeService.deleteNoticeBySlug(slug);
   }
 
+  @GetMapping("/write")
+  public ResponseEntity<NoticeResponses> getWriteNotices(
+      @AuthenticationPrincipal JwtAuthentication authentication) {
+    final List<Notice> notices = noticeService.getNoticeListByUsername(
+        new Username(authentication.username));
+
+    return new ResponseEntity<>(NoticeResponses.convert(notices), HttpStatus.OK);
+
+  }
 
 }
