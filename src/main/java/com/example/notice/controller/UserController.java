@@ -1,7 +1,17 @@
 package com.example.notice.controller;
 
-import static com.example.notice.controller.dto.UserDto.*;
+import static com.example.notice.controller.dto.UserDto.ProfileCreateRequest;
+import static com.example.notice.controller.dto.UserDto.UserLoginRequest;
+import static com.example.notice.controller.dto.UserDto.UserResponse;
+import static com.example.notice.controller.dto.UserDto.UserSignUpRequest;
+import static com.example.notice.controller.dto.UserDto.UserTokenResponse;
 
+import com.example.notice.configuration.jwt.JwtAuthentication;
+import com.example.notice.configuration.jwt.JwtAuthenticationToken;
+import com.example.notice.domain.user.entity.User;
+import com.example.notice.domain.user.entity.Username;
+import com.example.notice.domain.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,14 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.example.notice.configuration.jwt.JwtAuthentication;
-import com.example.notice.configuration.jwt.JwtAuthenticationToken;
-import com.example.notice.domain.user.entity.User;
-import com.example.notice.domain.user.entity.Username;
-import com.example.notice.domain.user.service.UserService;
-
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
