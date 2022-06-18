@@ -2,6 +2,8 @@ package com.example.notice.domain.user.entity;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +20,8 @@ class ProfileTest {
 		final Profile profile = Profile.of(nickname, age);
 
 		// then
-		assertThat(profile.getNickName()).isEqualTo(nickname);
-		assertThat(profile.getAge()).isEqualTo(age);
+		assertThat(profile).extracting(Profile::getNickName, Profile::getAge)
+			.isEqualTo(List.of(nickname, age));
 	}
 
 }

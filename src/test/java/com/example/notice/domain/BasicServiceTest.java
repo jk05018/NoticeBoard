@@ -1,19 +1,19 @@
 package com.example.notice.domain;
 
-import static org.assertj.core.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.notice.domain.profile.entity.Age;
-import com.example.notice.domain.profile.entity.Email;
-import com.example.notice.domain.profile.entity.NickName;
-import com.example.notice.domain.profile.entity.Profile;
-import com.example.notice.domain.profile.service.ProfileService;
+import com.example.notice.domain.user.entity.Age;
+import com.example.notice.domain.user.entity.Email;
+import com.example.notice.domain.user.entity.NickName;
+import com.example.notice.domain.user.entity.Password;
+import com.example.notice.domain.user.entity.Profile;
+import com.example.notice.domain.user.entity.User;
+import com.example.notice.domain.user.entity.Username;
+import com.example.notice.domain.user.service.UserService;
 import com.example.notice.exception.NoticeProjectException;
 
 @Transactional
@@ -26,37 +26,38 @@ import com.example.notice.exception.NoticeProjectException;
 public class BasicServiceTest {
 
 	@Autowired
-	private ProfileService profileService;
+	private UserService userService;
 
-	protected Profile profile;
-	protected Profile profile2;
+	protected User testUser;
+	protected Profile testProfile;
 
 	@BeforeEach
 	void setUp() {
-		final NickName nickName = new NickName("profile");
-		final Email email = new Email("profile@naver.com");
-		final Age age = new Age(25);
-
-		profile = 프로필_생성(nickName, email ,age);
-		final NickName nickName2 = new NickName("profile2");
-		final Email email2 = new Email("profile2@naver.com");
-		final Age age2 = new Age(30);
-
-		profile2 = 프로필_생성(nickName2, email2 ,age2);
-
-
+		testUser = 유저_등록(new Username("seunghan"), new Email("han@naver.com"), new Password("pass123"));
+		testProfile = 프로필_등록(testUser, new NickName("hani"), new Age(25));
 	}
 
-	protected Profile 프로필_생성(final NickName nickName, final Email email, final Age age) {
+	protected User 유저_등록(final Username username, final Email email, final Password password) {
 		try {
-			final Profile profile = Profile.of(nickName, email, age);
-			final Profile savedProfile = profileService.createProfile(profile);
+			final User user = User.createOf(username, email, password);
 
-			assertThat(savedProfile).isNotNull();
+			userService.registerUser(user);
 
-			return savedProfile;
+			return userService.findByUsername(username);
 		} catch (Exception e) {
-			throw new NoticeProjectException("테스트 프로필 등록 실패 입니다.", e);
+			throw new NoticeProjectException("UserServiceTest 유저 등록 실패", e);
 		}
 	}
+
+	protected Profile 프로필_등록(final User user, final NickName nickName, final Age age) {
+		try {
+			final Profile profile = Profile.of(nickName, age);
+			userService.makeProfile(user.getUsername(), profile);
+
+			return userService.findByUsername(user.getUsername()).getProfile();
+		} catch (Exception e) {
+			throw new NoticeProjectException("테스트 서비스 프로필 등록 실패입니다.", e);
+		}
+	}
+
 }

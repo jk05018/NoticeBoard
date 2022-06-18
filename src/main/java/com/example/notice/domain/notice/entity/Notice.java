@@ -14,7 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.notice.domain.base.BaseIdEntity;
-import com.example.notice.domain.profile.entity.Profile;
+import com.example.notice.domain.user.entity.Profile;
 
 import lombok.AccessLevel;
 import lombok.Getter;

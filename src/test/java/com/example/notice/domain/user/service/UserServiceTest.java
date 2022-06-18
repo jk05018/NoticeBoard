@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +17,6 @@ import com.example.notice.domain.user.entity.Profile;
 import com.example.notice.domain.user.entity.User;
 import com.example.notice.domain.user.entity.Username;
 import com.example.notice.domain.user.repository.UserRepository;
-import com.example.notice.exception.NoticeProjectException;
 
 class UserServiceTest extends BasicServiceTest {
 
@@ -34,8 +32,8 @@ class UserServiceTest extends BasicServiceTest {
 	@Test
 	void 유저를_이름으로_조회할수_있다() {
 		// given
-		final Username username = new Username("seunghan");
-		final Email email = new Email("email@naver.com");
+		final Username username = new Username("test");
+		final Email email = new Email("test@naver.com");
 		final Password password = new Password("password123");
 
 		유저_등록(username, email, password);
@@ -50,8 +48,8 @@ class UserServiceTest extends BasicServiceTest {
 	@Test
 	void 아이디와_비밀번호로_로그인할수_있다() {
 		// given
-		final Username username = new Username("seunghan");
-		final Email email = new Email("email@naver.com");
+		final Username username = new Username("test");
+		final Email email = new Email("test@naver.com");
 		final String pass = "password123";
 		final Password password = new Password(pass);
 
@@ -66,11 +64,11 @@ class UserServiceTest extends BasicServiceTest {
 	@Test
 	void 프로필을_등록할수_있다() {
 		// given
-		final Username username = new Username("seunghan");
-		유저_등록(username, new Email("email@naber.com"), new Password("pass123"));
+		final Username username = new Username("test");
+		유저_등록(username, new Email("test@naber.com"), new Password("pass123"));
 
 		// when
-		final NickName nickName = new NickName("nickname");
+		final NickName nickName = new NickName("testNickName");
 		final Age age = new Age(25);
 
 		final Profile profile = Profile.of(nickName, age);
@@ -79,21 +77,9 @@ class UserServiceTest extends BasicServiceTest {
 		//then
 		final User findUser = userService.findByUsername(username);
 
-		Assertions.assertThat(findUser.getProfile()).isEqualTo(profile);
-		Assertions.assertThat(findUser.getProfile().getNickName()).isEqualTo(nickName);
-		Assertions.assertThat(findUser.getProfile().getAge()).isEqualTo(age);
-	}
-
-	public void 유저_등록(final Username username, final Email email, final Password password) {
-
-		try {
-			final User user = User.createOf(username, email, password);
-
-			userService.registerUser(user);
-		} catch (Exception e) {
-			throw new NoticeProjectException("UserServiceTest 유저 등록 실패", e);
-		}
-
+		assertThat(findUser.getProfile()).isEqualTo(profile);
+		assertThat(findUser.getProfile()).extracting(Profile::getNickName, Profile::getAge)
+			.isEqualTo(List.of(nickName, age));
 	}
 
 }

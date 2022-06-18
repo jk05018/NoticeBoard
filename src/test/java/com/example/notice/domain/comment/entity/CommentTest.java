@@ -13,10 +13,9 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import com.example.notice.domain.notice.entity.Body;
 import com.example.notice.domain.notice.entity.Notice;
 import com.example.notice.domain.notice.entity.Title;
-import com.example.notice.domain.profile.entity.Age;
-import com.example.notice.domain.profile.entity.Email;
-import com.example.notice.domain.profile.entity.NickName;
-import com.example.notice.domain.profile.entity.Profile;
+import com.example.notice.domain.user.entity.Age;
+import com.example.notice.domain.user.entity.NickName;
+import com.example.notice.domain.user.entity.Profile;
 
 class CommentTest {
 
@@ -25,7 +24,7 @@ class CommentTest {
 
 	@BeforeEach
 	void setUp() {
-		writer = Profile.of(new NickName("seung han"), new Email("seunghan@naver.com"), new Age(25));
+		writer = Profile.of(new NickName("seung han"), new Age(25));
 		notice = Notice.createOf(new Title("title"), new Body("this is body."));
 		notice.assignWriter(writer);
 	}
@@ -34,8 +33,7 @@ class CommentTest {
 	void 내용과_공지사항_작성자로_댓글을_생성할_수_있다() {
 		// given
 		final Content content = new Content("this is content");
-		final Profile commentWriter = Profile.of(new NickName("commenter"), new Email("commentwriter123@gmail.com"),
-			new Age(30));
+		final Profile commentWriter = Profile.of(new NickName("commenter"), new Age(30));
 
 		// when
 		final Comment comment = Comment.of(content);

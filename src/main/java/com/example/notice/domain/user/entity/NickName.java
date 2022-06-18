@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NickName {
 
-	@Column(unique = true, length = 10)
+	@Column(unique = true, length = 30)
 	private String nickName;
 
 	public NickName(final String nickName) {

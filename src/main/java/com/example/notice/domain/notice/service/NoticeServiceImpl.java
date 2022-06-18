@@ -8,10 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.notice.domain.notice.entity.Notice;
 import com.example.notice.domain.notice.entity.Slug;
 import com.example.notice.domain.notice.repository.NoticeRepository;
-import com.example.notice.domain.profile.entity.Profile;
-import com.example.notice.domain.profile.repository.ProfileRepository;
+import com.example.notice.domain.user.entity.Profile;
+import com.example.notice.domain.user.entity.User;
+import com.example.notice.domain.user.entity.Username;
+import com.example.notice.domain.user.repository.UserRepository;
 import com.example.notice.exception.NoSuchNoticeException;
 import com.example.notice.exception.NoSuchProfileException;
+import com.example.notice.exception.NoSuchUserException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,14 +24,14 @@ import lombok.RequiredArgsConstructor;
 public class NoticeServiceImpl implements NoticeService {
 
 	private final NoticeRepository noticeRepository;
-	private final ProfileRepository profileRepository;
+	private final UserRepository userRepository;
 
 	@Override
-	public Notice createNotice(final Notice notice, final Long profileId) {
-		final Profile writer = profileRepository.findById(profileId)
+	public Notice createNotice(final Notice notice, final Username username) {
+		final User user = userRepository.findByUsername(username)
 			.orElseThrow(NoSuchProfileException::new);
 
-		notice.assignWriter(writer);
+		notice.assignWriter(user.getProfile());
 
 		return noticeRepository.save(notice);
 	}
@@ -55,20 +58,20 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public void deleteNoticeBySlug(Slug slug) {
+	public void deleteNoticeBySlug(final Slug slug) {
 		noticeRepository.deleteBySlug(slug);
 	}
 
 	@Override
-	public List<Notice> getNoticeListByProfile(final Long profileId) {
-		final Profile writer = profileRepository.findById(profileId)
-			.orElseThrow(NoSuchProfileException::new);
+	public List<Notice> getNoticeListByUsername(final Username username) {
+		final Profile writer = userRepository.findByUsername(username)
+			.orElseThrow(NoSuchUserException::new).getProfile();
 
 		return noticeRepository.findAllByWriter(writer);
 	}
 
 	@Override
-	public List<Notice> getLikedNoticeListByProfile(final Long profileId) {
+	public List<Notice> getLikedNoticeListByProfile(final Username username) {
 		return null;
 	}
 }
