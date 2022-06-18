@@ -1,6 +1,6 @@
 package com.example.notice.configuration.jwt;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import org.springframework.util.StringUtils;
 
