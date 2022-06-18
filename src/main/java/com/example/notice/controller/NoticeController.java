@@ -1,11 +1,17 @@
 package com.example.notice.controller;
 
-import static com.example.notice.controller.dto.NoticeDto.*;
+import static com.example.notice.controller.dto.NoticeDto.CreateNoticeRequest;
+import static com.example.notice.controller.dto.NoticeDto.NoticeResponse;
+import static com.example.notice.controller.dto.NoticeDto.NoticeResponses;
+import static com.example.notice.controller.dto.NoticeDto.UpdateNoticeRequest;
 
-import com.example.notice.domain.user.entity.NickName;
+import com.example.notice.configuration.jwt.JwtAuthentication;
+import com.example.notice.domain.notice.entity.Notice;
+import com.example.notice.domain.notice.entity.Slug;
+import com.example.notice.domain.notice.service.NoticeService;
+import com.example.notice.domain.user.entity.Username;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Required;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,14 +23,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.example.notice.configuration.jwt.JwtAuthentication;
-import com.example.notice.domain.notice.entity.Notice;
-import com.example.notice.domain.notice.entity.Slug;
-import com.example.notice.domain.notice.service.NoticeService;
-import com.example.notice.domain.user.entity.Username;
-
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/notices")
