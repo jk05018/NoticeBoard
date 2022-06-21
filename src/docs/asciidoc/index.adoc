@@ -1,0 +1,13 @@
+= Rest Docs 문서 만들기
+https://github.com/jk05018/NoticeBoard
+:doctype: book
+:icons: font
+:source-highlighter: highlighths
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+include::User-API.adoc[]
+
+
+include::Notice-API.adoc[]

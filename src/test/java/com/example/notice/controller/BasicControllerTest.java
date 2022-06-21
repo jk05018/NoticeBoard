@@ -1,28 +1,34 @@
 package com.example.notice.controller;
 
-import static com.example.notice.util.Tokens.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static com.example.notice.util.Tokens.TOKEN_HEADER;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.notice.document.ApiDocumentUtils;
+import com.example.notice.exception.NoticeProjectException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import com.example.notice.exception.NoticeProjectException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {
@@ -30,6 +36,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 	"logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE"
 })
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "docs.api.com")
 public class BasicControllerTest {
 
 	protected static JsonNode loginInfo;
@@ -95,6 +102,7 @@ public class BasicControllerTest {
 			profile.put("nickname", nickname)
 				.put("age", age);
 
+			System.out.println(getToken());
 			mockMvc.perform(post(UriComponentsBuilder.fromUriString(getBaseUrl(UserController.class))
 							.pathSegment("profile")
 							.build()
