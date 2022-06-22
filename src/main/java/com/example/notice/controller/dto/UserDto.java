@@ -118,6 +118,10 @@ public class UserDto {
     @JsonProperty("profile")
     private final Response response;
 
+    public static ProfileResponse convert(final Profile profile) {
+      return new ProfileResponse(Response.convert(profile));
+    }
+
     @Getter
     @Builder(access = AccessLevel.PRIVATE)
     public static class Response {
