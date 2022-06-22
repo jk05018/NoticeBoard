@@ -39,6 +39,46 @@ public class NoticeControllerTest extends BasicControllerTest {
   private final String BASE_URI = getBaseUrl(NoticeController.class);
 
   @Test
+  void 공지사항_목록을_조회할수_있다() throws Exception {
+    // given
+    로그인("seunghan1", "pass123");
+    프로필_등록("profile1", 25);
+
+    IntStream.range(0, 3)
+        .forEach(count -> 공지사항_등록("title" + count, "body" + count));
+
+    // when
+    final ResultActions result = mockMvc.perform(
+            get(UriComponentsBuilder.fromUriString(BASE_URI)
+                .build()
+                .toUri())
+                .header(TOKEN_HEADER, getToken()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.notices[*].title").exists())
+        .andExpect(jsonPath("$.notices[*].slug").exists())
+        .andExpect(jsonPath("$.notices[*].body").exists())
+        .andExpect(jsonPath("$.notices[*].writer").exists())
+        .andExpect(jsonPath("$.noticeCount").value(3));
+
+    // then
+    result.andDo(document("notice-list",
+        getDocumentRequest(),
+        getDocumentResponse(),
+        requestHeaders(
+            headerWithName(TOKEN_HEADER).description("JWT 토큰")
+        ),
+        responseFields(
+            fieldWithPath("noticeCount").type(NUMBER).description("공지사항 개수"),
+            fieldWithPath("notices[].title").type(STRING).description("공지사항 제목"),
+            fieldWithPath("notices[].slug").type(STRING).description("공지사항 슬러지"),
+            fieldWithPath("notices[].body").type(STRING).description("공지사항 내용"),
+            fieldWithPath("notices[].writer.nickname").type(STRING).description("작성자 닉네임"),
+            fieldWithPath("notices[].writer.age").type(NUMBER).description("작성자 나이")
+        )));
+
+  }
+
+  @Test
   void 공지사항을_슬러지로_조회할수_있다() throws Exception {
     // given
     로그인("seunghan1", "pass123");
@@ -63,7 +103,7 @@ public class NoticeControllerTest extends BasicControllerTest {
         .andExpect(jsonPath("$.notice.writer").exists());
 
     // then
-    result.andDo(document("notice-create",
+    result.andDo(document("notice-get",
         getDocumentRequest(),
         getDocumentResponse(),
         requestHeaders(
@@ -77,47 +117,6 @@ public class NoticeControllerTest extends BasicControllerTest {
             fieldWithPath("notice.writer.age").type(NUMBER).description("작성자 나이")
         )));
   }
-
-  @Test
-  void 공지사항_목록을_조회할수_있다() throws Exception {
-    // given
-    로그인("seunghan1", "pass123");
-    프로필_등록("profile1", 25);
-
-    IntStream.range(0, 30)
-        .forEach(count -> 공지사항_등록("title" + count, "body" + count));
-
-    // when
-    final ResultActions result = mockMvc.perform(
-            get(UriComponentsBuilder.fromUriString(BASE_URI)
-                .build()
-                .toUri())
-                .header(TOKEN_HEADER, getToken()))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.notices[*].title").exists())
-        .andExpect(jsonPath("$.notices[*].slug").exists())
-        .andExpect(jsonPath("$.notices[*].body").exists())
-        .andExpect(jsonPath("$.notices[*].writer").exists())
-        .andExpect(jsonPath("$.noticeCount").value(30));
-
-    // then
-    result.andDo(document("notice-list",
-        getDocumentRequest(),
-        getDocumentResponse(),
-        requestHeaders(
-            headerWithName(TOKEN_HEADER).description("JWT 토큰")
-        ),
-        responseFields(
-            fieldWithPath("noticeCount").type(NUMBER).description("공지사항 개수"),
-            fieldWithPath("notices[].title").type(STRING).description("공지사항 제목"),
-            fieldWithPath("notices[].slug").type(STRING).description("공지사항 슬러지"),
-            fieldWithPath("notices[].body").type(STRING).description("공지사항 내용"),
-            fieldWithPath("notices[].writer.nickname").type(STRING).description("작성자 닉네임"),
-            fieldWithPath("notices[].writer.age").type(NUMBER).description("작성자 나이")
-        )));
-
-  }
-
 
   @Test
   void 공지사항을_수정할수_있다() throws Exception {
@@ -211,13 +210,13 @@ public class NoticeControllerTest extends BasicControllerTest {
     final String title = "title";
     final String body = "body";
 
-    IntStream.range(0, 15)
+    IntStream.range(0, 2)
         .forEach(count -> 공지사항_등록(title + count, body + count));
 
     로그인("seunghan2", "pass123");
     프로필_등록("profile2", 25);
 
-    IntStream.range(0, 10)
+    IntStream.range(0, 3)
         .forEach(count -> 공지사항_등록(count + title, count + body));
 
     로그인("seunghan1", "pass123");
@@ -234,7 +233,7 @@ public class NoticeControllerTest extends BasicControllerTest {
         .andExpect(jsonPath("$.notices[*].slug").exists())
         .andExpect(jsonPath("$.notices[*].body").exists())
         .andExpect(jsonPath("$.notices[*].writer").exists())
-        .andExpect(jsonPath("$.noticeCount").value(15));
+        .andExpect(jsonPath("$.noticeCount").value(2));
 
     // then
     result.andDo(document("notice-write",
