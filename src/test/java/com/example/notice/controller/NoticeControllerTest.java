@@ -75,7 +75,6 @@ public class NoticeControllerTest extends BasicControllerTest {
             fieldWithPath("notices[].writer.nickname").type(STRING).description("작성자 닉네임"),
             fieldWithPath("notices[].writer.age").type(NUMBER).description("작성자 나이")
         )));
-
   }
 
   @Test
@@ -91,10 +90,7 @@ public class NoticeControllerTest extends BasicControllerTest {
 
     // when
     final ResultActions result = mockMvc.perform(
-            get(UriComponentsBuilder.fromUriString(BASE_URI)
-                .pathSegment(Slug.toSlug(title))
-                .build()
-                .toUri())
+            RestDocumentationRequestBuilders.get(BASE_URI + "/{slug}", Slug.toSlug(title))
                 .header(TOKEN_HEADER, getToken()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.notice.title").value(title))
@@ -106,6 +102,9 @@ public class NoticeControllerTest extends BasicControllerTest {
     result.andDo(document("notice-get",
         getDocumentRequest(),
         getDocumentResponse(),
+        pathParameters(
+            parameterWithName("slug").description("공지사항 슬러지")
+        ),
         requestHeaders(
             headerWithName(TOKEN_HEADER).description("JWT 토큰")
         ),
@@ -136,10 +135,7 @@ public class NoticeControllerTest extends BasicControllerTest {
 
     // when
     final ResultActions result = mockMvc.perform(
-            put(UriComponentsBuilder.fromUriString(BASE_URI)
-                .pathSegment(Slug.toSlug("title"))
-                .build()
-                .toUri())
+            RestDocumentationRequestBuilders.put(BASE_URI + "/{slug}", Slug.toSlug("title"))
                 .header(TOKEN_HEADER, getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectNode.toString()))
@@ -154,6 +150,9 @@ public class NoticeControllerTest extends BasicControllerTest {
     result.andDo(document("notice-update",
         getDocumentRequest(),
         getDocumentResponse(),
+        pathParameters(
+            parameterWithName("slug").description("공지사항 슬러지")
+        ),
         requestHeaders(
             headerWithName(TOKEN_HEADER).description("JWT 토큰")
         ),

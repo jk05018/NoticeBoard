@@ -37,7 +37,7 @@ class NoticeServiceTest extends BasicServiceTest {
     final Notice notice = 공지사항_등록(title, body, testUser, testProfile);
 
     // when
-    final Notice findNotice = noticeService.getNoticeBySlug(slug);
+    final Notice findNotice = noticeService.getBySlug(slug);
 
     // then
     assertThat(findNotice).extracting(Notice::getTitle, Notice::getSlug, Notice::getBody,
@@ -54,7 +54,7 @@ class NoticeServiceTest extends BasicServiceTest {
     final Notice notice3 = 공지사항_등록(new Title("title3"), new Body("body3"), testUser, testProfile);
 
     // when
-    final List<Notice> noticeList = noticeService.getNoticeList();
+    final List<Notice> noticeList = noticeService.getList();
 
     // then
     assertThat(noticeList).containsExactlyInAnyOrder(notice1, notice2, notice3);
@@ -75,7 +75,7 @@ class NoticeServiceTest extends BasicServiceTest {
     noticeService.updateNotice(Notice.updateOf(updateTitle, updateBody), new Slug(title));
 
     // then
-    final Notice updatedNotice = noticeService.getNoticeBySlug(new Slug(title));
+    final Notice updatedNotice = noticeService.getBySlug(new Slug(title));
 
     assertThat(updatedNotice).extracting(Notice::getTitle, Notice::getBody)
         .isEqualTo(List.of(updateTitle, updateBody));
@@ -92,10 +92,10 @@ class NoticeServiceTest extends BasicServiceTest {
     final Notice notice = 공지사항_등록(title, body, testUser, testProfile);
 
     // when
-    noticeService.deleteNoticeBySlug(slug);
+    noticeService.deleteBySlug(slug);
 
     // then
-    assertThrows(NoSuchNoticeException.class, () -> noticeService.getNoticeBySlug(slug));
+    assertThrows(NoSuchNoticeException.class, () -> noticeService.getBySlug(slug));
 
   }
 
@@ -105,7 +105,7 @@ class NoticeServiceTest extends BasicServiceTest {
     공지사항_랜덤_등록(10, "title", "body");
 
     // when
-    final List<Notice> noticeListOfProfile = noticeService.getNoticeListByUsername(
+    final List<Notice> noticeListOfProfile = noticeService.getListByUsername(
         testUser.getUsername());
 
     // then

@@ -10,19 +10,19 @@ public interface NoticeService {
 
 	Notice createNotice(final Notice notice, final Username username);
 
-	List<Notice> getNoticeList();
+	List<Notice> getList();
 
-	Notice getNoticeBySlug(final Slug slug);
+  Notice getBySlug(final Slug slug);
 
 	Notice updateNotice(final Notice udpateNotice, final Slug slug);
 
-	void deleteNoticeBySlug(final Slug slug);
+  void deleteBySlug(final Slug slug);
 
-	/* 사용자가 작성한 공지사항 목록 조회 */
-	List<Notice> getNoticeListByUsername(final Username username);
+  /* 사용자가 작성한 공지사항 목록 조회 */
+  List<Notice> getListByUsername(final Username username);
 
-	/* 사용자가 좋아요한 공지사항 목록 조회 */
-	List<Notice> getLikedNoticeListByProfile(final Username username);
+  /* 사용자가 좋아요한 공지사항 목록 조회 */
+  List<Notice> getLikedListByProfle(final Username username);
 
 
 

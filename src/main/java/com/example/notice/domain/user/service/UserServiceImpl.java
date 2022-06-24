@@ -1,12 +1,6 @@
 package com.example.notice.domain.user.service;
 
-import static com.google.common.base.Preconditions.*;
-
-import java.util.Objects;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import com.example.notice.domain.user.entity.Password;
 import com.example.notice.domain.user.entity.Profile;
@@ -14,9 +8,11 @@ import com.example.notice.domain.user.entity.User;
 import com.example.notice.domain.user.entity.Username;
 import com.example.notice.domain.user.repository.UserRepository;
 import com.example.notice.exception.NoSuchUserException;
-import com.example.notice.exception.NoticeProjectException;
-
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -61,6 +57,6 @@ public class UserServiceImpl implements UserService {
 		checkArgument(Objects.nonNull(username), "loginId must be provided.");
 
 		return userRepository.findByUsername(username)
-			.orElseThrow(() -> new NoSuchUserException("Could not found user for " + username));
+				.orElseThrow(NoSuchUserException::new);
 	}
 }

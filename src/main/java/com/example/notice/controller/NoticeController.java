@@ -43,14 +43,14 @@ public class NoticeController {
 
   @GetMapping
   public ResponseEntity<NoticeResponses> getNotices() {
-    final List<Notice> notices = noticeService.getNoticeList();
+    final List<Notice> notices = noticeService.getList();
 
     return new ResponseEntity<>(NoticeResponses.convert(notices), HttpStatus.OK);
   }
 
   @GetMapping("/{slug}")
   public ResponseEntity<NoticeResponse> getNotice(@PathVariable Slug slug) {
-    final Notice notice = noticeService.getNoticeBySlug(slug);
+    final Notice notice = noticeService.getBySlug(slug);
 
     return new ResponseEntity<>(NoticeResponse.convert(notice), HttpStatus.OK);
   }
@@ -65,13 +65,13 @@ public class NoticeController {
 
   @DeleteMapping("/{slug}")
   public void deleteNotice(@PathVariable Slug slug) {
-    noticeService.deleteNoticeBySlug(slug);
+    noticeService.deleteBySlug(slug);
   }
 
   @GetMapping("/write")
   public ResponseEntity<NoticeResponses> getWriteNotices(
       @AuthenticationPrincipal JwtAuthentication authentication) {
-    final List<Notice> notices = noticeService.getNoticeListByUsername(
+    final List<Notice> notices = noticeService.getListByUsername(
         new Username(authentication.username));
 
     return new ResponseEntity<>(NoticeResponses.convert(notices), HttpStatus.OK);

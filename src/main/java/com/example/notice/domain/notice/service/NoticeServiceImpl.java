@@ -37,14 +37,14 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public List<Notice> getNoticeList() {
+	public List<Notice> getList() {
 		return noticeRepository.findAll();
 	}
 
 	@Override
-	public Notice getNoticeBySlug(Slug slug) {
+	public Notice getBySlug(Slug slug) {
 		return noticeRepository.findBySlug(slug)
-			.orElseThrow(NoSuchNoticeException::new);
+				.orElseThrow(NoSuchNoticeException::new);
 	}
 
 	@Override
@@ -58,20 +58,20 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public void deleteNoticeBySlug(final Slug slug) {
+	public void deleteBySlug(final Slug slug) {
 		noticeRepository.deleteBySlug(slug);
 	}
 
 	@Override
-	public List<Notice> getNoticeListByUsername(final Username username) {
+	public List<Notice> getListByUsername(final Username username) {
 		final Profile writer = userRepository.findByUsername(username)
-			.orElseThrow(NoSuchUserException::new).getProfile();
+				.orElseThrow(NoSuchUserException::new).getProfile();
 
 		return noticeRepository.findAllByWriter(writer);
 	}
 
 	@Override
-	public List<Notice> getLikedNoticeListByProfile(final Username username) {
+	public List<Notice> getLikedListByProfle(final Username username) {
 		return null;
 	}
 }
