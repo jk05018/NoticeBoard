@@ -1,8 +1,14 @@
 package com.example.notice.exception;
 
-public class EmailDuplicatedException extends RuntimeException{
+public class EmailDuplicatedException extends RuntimeException {
 
-	public EmailDuplicatedException() {
-		super("이미 사용중인 이메일입니다.");
-	}
+  private static final String MESSAGE = "이미 사용 중인 이메일 입니다.";
+
+  public EmailDuplicatedException() {
+    super(MESSAGE);
+  }
+
+  public EmailDuplicatedException(Throwable cause) {
+    super(MESSAGE, cause);
+  }
 }
